@@ -1,0 +1,10 @@
+# dependencies
+/node_modules
+
+# Compiled binary addons
+build/Release
+dist
+target
+
+# misc
+.DS_Store
