@@ -42,7 +42,7 @@ class AddTicket extends PureComponent {
               } onChange={ this.handleChange } />
           </div>
 
-          <button type="submit">Create</button>
+          <button type="submit">Post</button>
 
           </form>
       )

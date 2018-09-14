@@ -33,7 +33,7 @@ export const createComment = (comment) => (dispatch, getState) => {
       type: ADD_COMMENT,
       payload: response.body
   }))
-  .catch(err => console.erroe(err))
+  .catch(err => console.error(err))
 }
 
 

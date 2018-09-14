@@ -1,6 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
 import { IsString } from '../../node_modules/class-validator';
-import { Exclude } from "../../node_modules/class-transformer";
 import Ticket from '../tickets/entity';
 import User from '../users/entity';
 
