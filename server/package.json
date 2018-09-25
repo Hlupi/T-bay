@@ -4,7 +4,8 @@
   "main": "target/index.js",
   "scripts": {
     "start": "nodemon",
-    "compile": "tsc -w"
+    "compile": "tsc -w",
+    "postinstall": "tsc -p ."
   },
   "license": "MIT",
   "dependencies": {
