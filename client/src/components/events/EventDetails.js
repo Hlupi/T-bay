@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import { getEvent } from '../../actions/events';
 import { getSelectedTickets, createTicket } from '../../actions/tickets';
-import { Link } from 'react-router-dom';
 import AddTicket from '../tickets/AddTicket';
-import './Events.css'
 
 class EventDetails extends PureComponent{
 
