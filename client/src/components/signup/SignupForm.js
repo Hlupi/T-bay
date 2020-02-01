@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react'
 
+import { SForm, Title, Element, Label, Input, Submit } from '../../fragments/Forms'
+
+
 export default class SignupForm extends PureComponent {
 	state = {}
 
@@ -9,67 +12,44 @@ export default class SignupForm extends PureComponent {
 	}
 
 	handleChange = (event) => {
-    const {name, value} = event.target
-
-    this.setState({
-      [name]: value
-    })
-  }
+		const { name, value } = event.target
+		this.setState({
+			[name]: value
+		})
+	}
 
 	render() {
 		return (
-      <div className="signup-form">
-  			<form onSubmit={this.handleSubmit}>
-				  <label>
-            First name <br />
-            <input type="firstName" name="firstName" value={
-  						this.state.firstName || ''
-  					} onChange={ this.handleChange } />
-          </label>
-					<br />
-
-					<label>
-            Last Name <br />
-            <input type="lastName" name="lastName" value={
-  						this.state.lastName || ''
-  					} onChange={ this.handleChange } />
-          </label>
-					<br />
-
-  				<label>
-            Email <br />
-            <input type="email" name="email" value={
-  						this.state.email || ''
-  					} onChange={ this.handleChange } />
-          </label>
-					<br />
-
-  				<label>
-            Password <br />
-  					<input type="password" name="password" value={
-  						this.state.password || ''
-  					} onChange={ this.handleChange } />
-  				</label>
-					<br />
-
-  				<label>
-            Confirm password <br />
-  					<input type="password" name="confirmPassword" value={
-  						this.state.confirmPassword || ''
-  					} onChange={ this.handleChange } />
-  				</label>
-
-  				{
-  					this.state.password &&
-  					this.state.confirmPassword &&
-  					this.state.password !== this.state.confirmPassword &&
-  					<p style={{color:'red'}}>The passwords do not match!</p>
-					}
-					<br />
-
-  				<button type="submit" className="btn">Sign up</button>
-  			</form>
-      </div>
+			<SForm onSubmit={this.handleSubmit} as="form">
+				<Title>Join us!</Title>
+				<Element>
+					<Label htmlFor="firstName">First Name</Label>
+					<Input type="text" name="firstName" id="firstName" value={this.state.firstName || ''} onChange={this.handleChange} />
+				</Element>
+				<Element>
+					<Label htmlFor="lastName">Last name</Label>
+					<Input type="text" name="lastName" id="lastName" value={this.state.lastName || ''} onChange={this.handleChange} />
+				</Element>
+				<Element>
+					<Label htmlFor="email">Email</Label>
+					<Input type="email" name="email" id="email" value={this.state.email || ''} onChange={this.handleChange} />
+				</Element>
+				<Element>
+					<Label htmlFor="password">Password</Label>
+					<Input type="password" name="password" id="password" value={this.state.password || ''} onChange={this.handleChange} />
+				</Element>
+				<Element>
+					<Label htmlFor="confirmPassword">Confirm password</Label>
+					<Input type="password" name="confirmPassword" id="confirmPassword" value={this.state.confirmPassword || ''} onChange={this.handleChange} />
+				</Element>
+				{
+					this.state.password &&
+					this.state.confirmPassword &&
+					this.state.password !== this.state.confirmPassword &&
+					<p style={{ color: 'red' }}>The passwords do not match!</p>
+				}
+				<Submit type="submit" center>Sign up</Submit>
+			</SForm>
 		)
 	}
 }

@@ -1,11 +1,17 @@
 import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
-import { login }  from '../../actions/users'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import styled from 'styled-components'
+
+import { login } from '../../actions/users'
 import LoginForm from './LoginForm'
+
+const Container = styled.div``
+
 
 class LoginPage extends PureComponent {
 	handleSubmit = (data) => {
+		console.log('hiya')
 		this.props.login(data.email, data.password)
 	}
 
@@ -15,14 +21,11 @@ class LoginPage extends PureComponent {
 		)
 
 		return (
-			<div>
-				<h1>Login</h1>
-
+			<Container>
 				<LoginForm onSubmit={this.handleSubmit} />
-
-        { this.props.error && 
-          <span style={{color:'red'}}>{this.props.error}</span> }
-			</div>
+				{this.props.error &&
+					<span style={{color: 'red'}}>{this.props.error}</span>}
+			</Container>
 		)
 	}
 }

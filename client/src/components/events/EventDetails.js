@@ -27,7 +27,7 @@ const Container = styled.section`
 `
 
 const StyledWrapper = styled(Wrapper)`
-  margin-bottom: 10px;
+  padding-bottom: 10px;
 `
 
 const Date = styled.p`
@@ -43,7 +43,7 @@ const Title = styled.h1`
 `
 
 const Subtitle = styled.h2`
-  ${({addSpacing}) => addSpacing && 'margin-bottom: 10px'};
+  ${({ addSpacing }) => addSpacing && 'margin-bottom: 10px'};
   font-size: 18px;
 `
 
@@ -101,6 +101,7 @@ const Price = styled.p`
   }
 `
 
+
 class EventDetails extends PureComponent {
   state = {
     backdropOpen: false
@@ -117,51 +118,50 @@ class EventDetails extends PureComponent {
   }
 
   toggleBackdrop = () => {
-    this.setState((prevState, props) => ({backdropOpen: !prevState.backdropOpen}))
+    this.setState((prevState, props) => ({ backdropOpen: !prevState.backdropOpen }))
   }
 
   render() {
     const { event, tickets, history, user } = this.props
     const { backdropOpen } = this.state
-
-    if (!event) return null
     const hasTickets = tickets.length
     const renderTickets = hasTickets && tickets.map((ticket, i) => (
       <Ticket key={i} onClick={() => history.push(`/tickets/${ticket.id}`)}>
-          <Seller>{ticket.user.firstName}</Seller>
+        <Seller>{ticket.user.firstName}</Seller>
         <TicketInfo>{ticket.description}</TicketInfo>
         <Price>${ticket.price}</Price>
       </Ticket>
     ))
 
+    if (!event) return null
+
     return (
       <React.Fragment>
         {!event.id && <div>Loading...</div>}
-        {event.id && 
-        <React.Fragment>
-          <Header style={{ backgroundImage: `url('${event.picture}')` }} />
-          <Container>
-            <StyledWrapper>
-              <Date>{event.starts} - {event.ends}</Date>
-              <Title>{event.name}</Title>
-              <Subtitle addSpacing>Details</Subtitle>
-              <Description>{event.description}</Description>
-              <Toolbar>
-              <Subtitle>Tickets</Subtitle>
-              <PlusButton onClick={this.toggleBackdrop} open={backdropOpen} />
-              </Toolbar>
-              {hasTickets ? renderTickets : <Description>No tickets yet</Description>}
-            </StyledWrapper>
-            {user && backdropOpen &&
-            <AddTicket onSubmit={this.createTicket} close={this.toggleBackdrop} />
-            }
-          </Container>
-        </React.Fragment>
+        {event.id &&
+          <React.Fragment>
+            <Header style={{ backgroundImage: `url('${event.picture}')` }} />
+            <Container>
+              <StyledWrapper>
+                <Date>{event.starts} - {event.ends}</Date>
+                <Title>{event.name}</Title>
+                <Subtitle addSpacing>Details</Subtitle>
+                <Description>{event.description}</Description>
+                <Toolbar>
+                  <Subtitle>Tickets</Subtitle>
+                  {user && <PlusButton onClick={this.toggleBackdrop} />}
+                </Toolbar>
+                {hasTickets ? renderTickets : <Description>No tickets yet</Description>}
+              </StyledWrapper>
+              {user && backdropOpen &&
+                <AddTicket onSubmit={this.createTicket} close={this.toggleBackdrop} open={backdropOpen} />
+              }
+            </Container>
+          </React.Fragment>
         }
       </React.Fragment>
     )
   }
-
 }
 
 const mapStateToProps = function (state) {

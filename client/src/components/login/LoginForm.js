@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react'
 
+import { SForm, Title, Element, Label, Input, Submit } from '../../fragments/Forms'
+
+
 export default class LoginForm extends PureComponent {
 	state = {}
 
@@ -9,35 +12,26 @@ export default class LoginForm extends PureComponent {
 	}
 
 	handleChange = (event) => {
-    const {name, value} = event.target
-
-    this.setState({
-      [name]: value
-    })
-  }
+		const { name, value } = event.target
+		this.setState({
+			[name]: value
+		})
+	}
 
 	render() {
 		return (
-      <div className="login-form">
-  			<form onSubmit={this.handleSubmit}>
-  				<label>
-            Email <br />
-            <input type="email" name="email" value={
-  						this.state.email || ''
-  					} onChange={ this.handleChange } />
-          </label>
-          <br />
-
-  				<label>
-            Password <br />
-            <input type="password" name="password" value={
-  						this.state.password || ''
-  					} onChange={ this.handleChange } />
-          </label>
-          <br />
-
-  				<button type="submit" className="btn">Login</button>
-  			</form>
-		  </div>)
+			<SForm onSubmit={this.handleSubmit} as="form">
+				<Title>Welcome back</Title>
+				<Element>
+					<Label htmlFor="email">Email</Label>
+					<Input type="email" name="email" value={this.state.email || ''} onChange={this.handleChange} />
+				</Element>
+				<Element>
+					<Label htmlFor="password">Password</Label>
+					<Input type="password" name="password" value={this.state.password || ''} onChange={this.handleChange} />
+				</Element>
+				<Submit type="submit" center>Login</Submit>
+			</SForm>
+		)
 	}
 }

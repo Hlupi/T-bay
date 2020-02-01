@@ -104,6 +104,7 @@ const Date = styled.p`
   color: #514e57;
 `
 
+
 class EventsList extends PureComponent {
   state = {
     backdropOpen: false
@@ -124,7 +125,6 @@ class EventsList extends PureComponent {
   render() {
     const { events, history, user } = this.props
     const { backdropOpen } = this.state
-
     const renderEvents = events.map((event, i) => {
       return (
         <Card key={i} onClick={() => history.push(`/events/${event.id}`)}>
@@ -147,14 +147,14 @@ class EventsList extends PureComponent {
           <Wrapper>
             <Toolbar>
               {user && 
-              <PlusButton onClick={this.toggleBackdrop} open={backdropOpen} />
+              <PlusButton onClick={this.toggleBackdrop} />
               }
             </Toolbar>
             <Cards>
               {renderEvents}
             </Cards>
             {user && backdropOpen && 
-              <AddEvent onSubmit={this.createEvent} close={this.toggleBackdrop} />
+              <AddEvent onSubmit={this.createEvent} close={this.toggleBackdrop} open={backdropOpen} />
             }
           </Wrapper>
         </Container>

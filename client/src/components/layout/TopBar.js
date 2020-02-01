@@ -34,6 +34,7 @@ const Button = styled.button`
   }
 `
 
+
 const TopBar = (props) => {
   const { location, history, user } = props
 

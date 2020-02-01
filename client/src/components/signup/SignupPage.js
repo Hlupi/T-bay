@@ -1,8 +1,13 @@
 import React, { PureComponent } from 'react'
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
+
 import { signup } from '../../actions/users'
 import SignupForm from './SignupForm'
-import { Redirect } from 'react-router-dom'
+
+const Container = styled.div``
+
 
 class SignupPage extends PureComponent {
 	handleSubmit = (data) => {
@@ -15,13 +20,10 @@ class SignupPage extends PureComponent {
 		)
 
 		return (
-			<div>
-				<h1>Sign up</h1>
-
+			<Container>
 				<SignupForm onSubmit={this.handleSubmit} />
-
-				<p style={{color:'red'}}>{ this.props.signup.error }</p>
-			</div>
+				<p style={{ color: 'red' }}>{this.props.signup.error}</p>
+			</Container>
 		)
 	}
 }
@@ -32,4 +34,4 @@ const mapStateToProps = function (state) {
 	}
 }
 
-export default connect(mapStateToProps, {postSignup: signup})(SignupPage)
+export default connect(mapStateToProps, { postSignup: signup })(SignupPage)

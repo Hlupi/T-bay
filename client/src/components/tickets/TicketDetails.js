@@ -111,7 +111,6 @@ const Comment = styled.div`
   }
 `
 
-
 const Author = styled.div`
   padding: 0 15px;
   background: rgba(60, 19, 211, 0.1);
@@ -208,59 +207,40 @@ class TicketDetails extends PureComponent {
 
     return (
       <React.Fragment>
+        <Header style={{ backgroundImage: `url('${event.picture}')` }} />
         <Container>
+          <StyledWrapper>
+            <Date>{event.starts} - {event.ends}</Date>
+            <Title>Ticket for {event.name}</Title>
+            <Seller>Sold by {ticket.user.firstName}</Seller>
+            <Toolbar flex>
+              <Subtitle addSpacing>Details</Subtitle>
+              {this.props.currentUser && !this.state.edit &&
+                <div>
+                  <Button onClick={this.toggleEdit}>edit</Button>
+                </div>}
+            </Toolbar>
+            <Card>
+              <Thumb style={{ backgroundImage: `url('${ticket.picture}')` }} />
+              <Description>{ticket.description}</Description>
+              <Price>${ticket.price}</Price>
+            </Card>
+            <Toolbar addSpacing flex>
+              <Subtitle>Estimated risk:</Subtitle>
+              <Risk>{this.totalRisk()}%</Risk>
+            </Toolbar>
+            <Subtitle addSpacing>Comments</Subtitle>
 
-     
-        <StyledWrapper>
-          {!ticket.id && <div>Loading...</div>}
-          {ticket.id && (
-            <React.Fragment>
-              {/* <Header style={{ backgroundImage: `url('${event.picture}')` }} /> */}
-              {/* <Date>{event.starts} - {event.ends}</Date> */}
-              {/* <Title>Ticket for {event.name}</Title> */}
-              <Seller>Sold by {ticket.user.firstName}</Seller>
-              <Toolbar flex>
-
-                <Subtitle addSpacing>Details</Subtitle>
-                {
-                  this.props.currentUser &&
-                  !this.state.edit &&
-                  <div>
-
-                    <Button onClick={this.toggleEdit}>edit</Button>
-                  </div>
-                }
-              </Toolbar>
-              <Card>
-                <Thumb style={{ backgroundImage: `url('${ticket.picture}')` }} />
-                <Description>{ticket.description}</Description>
-                <Price>${ticket.price}</Price>
-              </Card>
-              <Toolbar addSpacing flex>
-                <Subtitle>Estimated risk:</Subtitle>
-                <Risk>{this.totalRisk()}%</Risk>
-              </Toolbar>
-              <Subtitle addSpacing>Comments</Subtitle>
-            </React.Fragment>)}
-
-          {
-            this.props.currentUser &&
-            this.state.edit &&
-            <AddTicket initialValues={ticket} onSubmit={this.editTicket} />
-          }
-          <div>
+            {this.props.currentUser && this.state.edit &&
+              <AddTicket initialValues={ticket} onSubmit={this.editTicket} close={this.toggleEdit} open={this.state.edit} />}
             {comments.map(comment => (
               <Comment key={comment.id}>
                 <Author>{comment.user.firstName}</Author>
                 <Content>{comment.text}</Content>
               </Comment>
             ))}
-          </div>
-
-          {this.props.currentUser && <div>
-            <AddComment onSubmit={this.addComment} />
-          </div>}
-        </StyledWrapper>
+            {this.props.currentUser && <AddComment onSubmit={this.addComment} />}
+          </StyledWrapper>
         </Container>
       </React.Fragment>
     )
