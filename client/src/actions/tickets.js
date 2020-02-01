@@ -19,13 +19,29 @@ export const getAllTickets = () => (dispatch) => {
     .catch(err => alert(err))
 }
 
-export const getSelectedTickets = (eventId) => (dispatch) => {
+// const addRiskToTickets = (tickets, ) => {
+    
+// }
+
+export const getSelectedTickets = (eventId) => (dispatch, getState) => {
   request
   .get(`${ baseUrl }/events/tickets/${ eventId }`)
-  .then( response => dispatch({
-      type: GOT_SELECTED_TICKETS,
-      payload: response.body.tickets
-  }))
+//   .then(response => response.body.tickets)
+//   .then(tickets => {
+//       // do your stuff
+//         return dispatch({
+//             type: GOT_SELECTED_TICKETS,
+//             payload: your_stuff
+//         })
+//   })
+// //   .then(response => dispatch({
+// //       type: GOT_SELECTED_TICKETS,
+// //       payload: response.body.tickets
+// //   }))
+.then(response => dispatch({
+    type: GOT_SELECTED_TICKETS,
+    payload: response.body.tickets
+}))
   .catch(err => alert(err))
 }
 

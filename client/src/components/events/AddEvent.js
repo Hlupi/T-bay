@@ -33,8 +33,8 @@ const Form = styled(Wrapper)`
   max-width: 500px;
   background: #fff;
   border-radius: 10px;
-
 `
+
 
 class AddEvent extends PureComponent {
 
@@ -60,6 +60,7 @@ class AddEvent extends PureComponent {
       <Container>
       <Backdrop onClick={this.props.close} />
         <Form as='form' onSubmit={this.handleSubmit}>
+          <h3>Add an event</h3>
           <div>
             <label htmlFor="name">Name:</label>
             <input name="name" id="name" value={

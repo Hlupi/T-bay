@@ -6,34 +6,14 @@ import { getAllEvents, createEvent } from '../../actions/events'
 import AddEvent from './AddEvent';
 import Wrapper from '../../fragments/Wrapper'
 import Header from '../../fragments/Header'
+import PlusButton from '../../fragments/Button'
 
-const Container = styled(Wrapper)`
+const Container = styled.section`
   position: relative;
 `
 
 const Toolbar = styled.div`
   padding: 10px 0;
-`
-
-const Button = styled.button`
-  margin-left: auto;
-  display: block;
-  padding: 0;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: ${({ open }) => open ? 'rgba(255, 255, 255, 0.9)' : 'rgba(60, 19, 211, 0.1)'} ;
-  position: relative;
-  z-index: 3;
-  transition: background .25s linear;
-  & > img {
-    width: 40%;
-    height: 40%;
-    position: relative;
-    top: 50%;
-    transition: transform .25s linear;
-    ${({ open }) => open && 'transform: rotate(45deg)'};
-  }
 `
 
 const Cards = styled.article`
@@ -55,27 +35,29 @@ const Thumb = styled.div`
 `
 
 const Card = styled.div`
-  width: 100%;
+  margin-bottom: 20px;
+  flex-basis: 100%;
   flex-shrink: 0;
   flex-grow: 0;
   display: flex;
+  background: #ffffff;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 20px;
+  cursor: pointer;
   &:hover {
     & ${Thumb} {
       transform: scale(1.2);
     }
   }
   @media(min-width: 640px) {
+    margin-bottom: 40px;
     flex-wrap: wrap;    
     &:not(:nth-child(3n)) {
-      margin-bottom: 40px;
       margin-right: 20px;
-      width: calc(33.3333% - 20px);
+      flex-basis: calc(33.3333% - 20px);
     }
     &:nth-child(3n) {
-      width: 33.3333%;
+      flex-basis: 33.3333%;
     }
   }
 `
@@ -119,6 +101,7 @@ const Description = styled.p`
 
 const Date = styled.p`
   font-size: 14px;
+  color: #514e57;
 `
 
 class EventsList extends PureComponent {
@@ -160,16 +143,20 @@ class EventsList extends PureComponent {
     return (
       <React.Fragment>
         <Header />
-        <Container as="section">
-          <Toolbar>
-            <Button onClick={this.toggleBackdrop} open={backdropOpen}><img src="img/plus.svg" alt="Plus sign" /></Button>
-          </Toolbar>
-          <Cards>
-            {renderEvents}
-          </Cards>
-          {user && backdropOpen && 
-            <AddEvent onSubmit={this.createEvent} close={this.toggleBackdrop} />
-          }
+        <Container>
+          <Wrapper>
+            <Toolbar>
+              {user && 
+              <PlusButton onClick={this.toggleBackdrop} open={backdropOpen} />
+              }
+            </Toolbar>
+            <Cards>
+              {renderEvents}
+            </Cards>
+            {user && backdropOpen && 
+              <AddEvent onSubmit={this.createEvent} close={this.toggleBackdrop} />
+            }
+          </Wrapper>
         </Container>
       </React.Fragment>
     )

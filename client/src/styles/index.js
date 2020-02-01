@@ -15,6 +15,7 @@ export default createGlobalStyle`
     min-width: 320px;
     overflow-x: hidden;
     font-family: 'Quicksand', sans-serif;
+    background: #f7f7f7;
   }
   * {
     box-sizing: border-box;
