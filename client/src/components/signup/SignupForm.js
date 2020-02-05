@@ -36,11 +36,11 @@ export default class SignupForm extends PureComponent {
 				</Element>
 				<Element>
 					<Label htmlFor="password">Password</Label>
-					<Input type="password" name="password" id="password" value={this.state.password || ''} onChange={this.handleChange} />
+					<Input type="password" name="password" id="password" value={this.state.password || ''} onChange={this.handleChange}  autocomplete="new-password" />
 				</Element>
 				<Element>
 					<Label htmlFor="confirmPassword">Confirm password</Label>
-					<Input type="password" name="confirmPassword" id="confirmPassword" value={this.state.confirmPassword || ''} onChange={this.handleChange} />
+					<Input type="password" name="confirmPassword" id="confirmPassword" value={this.state.confirmPassword || ''} onChange={this.handleChange}  autocomplete="new-password" />
 				</Element>
 				{
 					this.state.password &&

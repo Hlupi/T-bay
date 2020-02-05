@@ -12,7 +12,7 @@ export default class TicketController {
         return Ticket.findOne(id)
     }
 
-    @Get('/events/tickets/:event_id')
+    @Get('/events/:event_id/tickets')
     async allTickets(
       @Param('event_id') id: number
     ) {

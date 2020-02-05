@@ -126,7 +126,7 @@ class EventDetails extends PureComponent {
     const { backdropOpen } = this.state
     const hasTickets = tickets.length
     const renderTickets = hasTickets && tickets.map((ticket, i) => (
-      <Ticket key={i} onClick={() => history.push(`/tickets/${ticket.id}`)}>
+      <Ticket key={i} onClick={() => history.push(`/events/${event.id}/tickets/${ticket.id}`)}>
         <Seller>{ticket.user.firstName}</Seller>
         <TicketInfo>{ticket.description}</TicketInfo>
         <Price>${ticket.price}</Price>

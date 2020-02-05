@@ -23,7 +23,7 @@ class App extends Component {
             <Route exact path="/signup" component={SignupPage} />
             <Route exact path="/events" component={EventsList} />
             <Route exact path="/events/:id" component={EventDetails} />
-            <Route exact path="/tickets/:id" component={TicketDetails} />
+            <Route exact path="/events/:ed/tickets/:id" component={TicketDetails} />
             <Route exact path="/" render={() => <Redirect to="/events" />} />
           </main>
         </React.Fragment>

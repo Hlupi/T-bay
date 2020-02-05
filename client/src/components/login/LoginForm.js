@@ -28,7 +28,7 @@ export default class LoginForm extends PureComponent {
 				</Element>
 				<Element>
 					<Label htmlFor="password">Password</Label>
-					<Input type="password" name="password" value={this.state.password || ''} onChange={this.handleChange} />
+					<Input type="password" name="password" value={this.state.password || ''} onChange={this.handleChange} autocomplete="current-password" />
 				</Element>
 				<Submit type="submit" center>Login</Submit>
 			</SForm>
