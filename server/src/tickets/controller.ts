@@ -1,15 +1,24 @@
 import { JsonController, Get, Param, Body, Post, HttpCode, Authorized, CurrentUser, ForbiddenError, NotFoundError, Put } from 'routing-controllers'
 import Ticket from './entity'
 import User from '../users/entity';
+import Comment from '../comments/entity'
+import { Risk } from './risk'
 
-@JsonController()
+@JsonController()   
 export default class TicketController {
 
-    @Get('/tickets/:id([0-9]+)')
-    getTicket(
-        @Param('id') id: number
+    @Get('/events/:event_id/tickets/:id([0-9]+)')
+    async getTicket(
+        @Param('id') id: number,
+        @Param('event_id') ed: number
     ) {
-        return Ticket.findOne(id)
+        const ticket = await Ticket.findOne(id)
+        const tickets = await Ticket.find({where: {event: ed}})
+        const comments = await Comment.find({where: {ticket: id}})
+        const ticketsByAuthor = await Ticket.find({where: {user: ticket!['user'].id}})
+        const risk = Risk(comments, tickets, ticket, ticketsByAuthor)
+        const allInfo =  { ...ticket, risk }
+        return allInfo 
     }
 
     @Get('/events/:event_id/tickets')
@@ -17,13 +26,13 @@ export default class TicketController {
       @Param('event_id') id: number
     ) {
         const tickets = await Ticket.find({where: {event: id}})
-        return { tickets }
-    }
-
-    @Get('/tickets-all')
-    async allUserTickets() {
-        const allTickets = await Ticket.find()
-        return { allTickets }
+        const ticketsWithRisk = await Promise.all(tickets.map(async ticket => {
+            const comments = await Comment.find({where: {ticket: ticket.id}})
+            const ticketsByAuthor = await Ticket.find({where: {user: ticket.user.id}})
+            const risk = Risk(comments, tickets, ticket, ticketsByAuthor)
+            return { ...ticket, risk }
+        }))
+        return { tickets: ticketsWithRisk } 
     }
 
     @Authorized()

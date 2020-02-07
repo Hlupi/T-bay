@@ -29,7 +29,7 @@ export default class Event extends BaseEntity {
   ends: string
 
 
-  @OneToMany(_ => Ticket, ticket => ticket.event, {eager:true})
+  @OneToMany(_ => Ticket, ticket => ticket.event)
   tickets: Ticket[]
 
   @Exclude({toPlainOnly:true})

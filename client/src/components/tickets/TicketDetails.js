@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components'
 
 import { getEvent } from '../../actions/events'
-import { getTicket, editTicket, getAllTickets } from '../../actions/tickets';
+import { getSelectedTickets, getTicket, editTicket } from '../../actions/tickets';
 import { getSelectedComments, createComment } from '../../actions/comments';
 import Wrapper from '../../fragments/Wrapper'
 import AddComment from './AddComment'
@@ -14,6 +14,7 @@ const Header = styled.header`
   background-repeat: no-repeat;
   background-size: cover;
   height: 200px;
+  border-bottom-right-radius: 50px;
   @media(min-width: 640px) {
     height: 250px;
   }
@@ -61,8 +62,6 @@ const Card = styled.div`
   background: #ffffff;
   border-radius: 10px;
   overflow: hidden;
-  cursor: pointer;
-  max-width: 600px;
 `
 
 const Thumb = styled.div`
@@ -79,7 +78,7 @@ const Thumb = styled.div`
 `
 
 const Description = styled.p`
-  padding: 5px;
+  padding: 20px;
   font-size: 16px;
 `
 
@@ -91,7 +90,6 @@ const Price = styled.p`
 
 const Toolbar = styled.div`
   ${({ addSpacing }) => addSpacing && 'margin-bottom: 40px'};
-  max-width: 600px;
   ${({ flex }) => flex && 'display: flex'};
 `
 
@@ -112,12 +110,13 @@ const Comment = styled.div`
 `
 
 const Author = styled.div`
-  padding: 0 15px;
   background: rgba(60, 19, 211, 0.1);
   color: #3c13d3;
   border-radius: 10px;
   margin-right: 20px;
   max-height: 20px;
+  width: 80px;
+  text-align: center;
 `
 
 const Content = styled.p`
@@ -145,9 +144,11 @@ class TicketDetails extends PureComponent {
   }
 
   componentWillMount() {
-    this.props.getTicket(this.props.match.params.id)
-    this.props.getAllTickets()
+    this.props.getEvent(this.props.match.params.ed)
+    this.props.getSelectedTickets(this.props.match.params.ed)
+    this.props.getTicket(this.props.match.params.ed, this.props.match.params.id)
     this.props.getSelectedComments(this.props.match.params.id)
+    
   }
 
   editTicket = (ticket) => {
@@ -160,49 +161,9 @@ class TicketDetails extends PureComponent {
     this.props.createComment(comment)
   }
 
-  commentsRisk() {
-    const comments = this.props.ticket.comments.length
-    if (comments > 3) return 5
-    else return 0
-  }
-
-  priceRisk() {
-    const ticketPrice = this.props.ticket.price
-    const allPrices = this.props.tickets.map(ticket => ticket.price)
-    const totalPrices = allPrices.reduce((a, b) => a + b, 0)
-    const averagePrice = totalPrices / this.props.tickets.length
-    const risk = ((averagePrice - ticketPrice) / averagePrice) * 100
-    if (risk < -10) return -10
-    else return risk
-  }
-
-  userRisk() {
-    const userIds = this.props.tickets.map(ticket => ticket.user.id)
-    const ticketAuthor = this.props.ticket.user.id
-    const count = userIds.filter(x => x === ticketAuthor).length
-    if (count === 1) return 10
-    else return 0
-  }
-
-  timeRsik() {
-    const time = this.props.ticket.postedAt.slice(11, 13)
-    if (time > 8 && time < 17) return -10
-    else return 0
-  }
-
-
-  totalRisk() {
-    const minRisk = 5
-    const maxRisk = 95
-    const risk = this.commentsRisk() + this.priceRisk() + this.userRisk() + this.timeRsik()
-    if (risk < minRisk) return minRisk
-    if (risk > maxRisk) return maxRisk
-    else return parseFloat(risk).toFixed(0)
-  }
-
   render() {
     const { event, ticket, comments } = this.props
-    // const color = risk < 6 ? 'green' : risk < 11 ? 'orange' : 'red'
+
     if (!ticket) return null
 
     return (
@@ -227,7 +188,7 @@ class TicketDetails extends PureComponent {
             </Card>
             <Toolbar addSpacing flex>
               <Subtitle>Estimated risk:</Subtitle>
-              <Risk>{this.totalRisk()}%</Risk>
+              <Risk>{ticket.risk}%</Risk>
             </Toolbar>
             <Subtitle addSpacing>Comments</Subtitle>
 
@@ -257,4 +218,4 @@ const mapStateToProps = function (state) {
   }
 }
 
-export default connect(mapStateToProps, { getTicket, getAllTickets, getSelectedComments, createComment, editTicket })(TicketDetails)
+export default connect(mapStateToProps, { getSelectedTickets, getTicket, getEvent, getSelectedComments, createComment, editTicket })(TicketDetails)

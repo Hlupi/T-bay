@@ -1,10 +1,7 @@
-import { GOT_ALL_TICKETS, GOT_SELECTED_TICKETS,  ADD_TICKET, EDIT_TICKET } from '../actions/tickets'
+import { GOT_SELECTED_TICKETS,  ADD_TICKET, EDIT_TICKET } from '../actions/tickets'
 
 export default function (state = [], action) {
     switch (action.type) {
-        case GOT_ALL_TICKETS:
-            return action.payload
-
         case GOT_SELECTED_TICKETS:
             return action.payload
 

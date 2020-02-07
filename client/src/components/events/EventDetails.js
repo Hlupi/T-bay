@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { getEvent } from '../../actions/events';
@@ -13,6 +14,7 @@ const Header = styled.header`
   background-repeat: no-repeat;
   background-size: cover;
   height: 200px;
+  border-bottom-right-radius: 50px;
   @media(min-width: 640px) {
     height: 250px;
   }
@@ -58,14 +60,16 @@ const Toolbar = styled.div`
   align-items: center;
 `
 
-const Ticket = styled.div`
+const Ticket = styled.li`
   padding: 15px 0;
+  border-top: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+`
+
+const StyledLink = styled(Link)`
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  border-top: 1px solid #efefef;
-  border-bottom: 1px solid #efefef;
-  cursor: pointer;
   @media(min-width: 640px) {
     align-items: center;
   }
@@ -96,6 +100,7 @@ const TicketInfo = styled.p`
 const Price = styled.p`
   margin-left: auto;
   order: 2;
+  color: ${({ risk }) => risk === 'high' ? 'red' : risk === 'moderate' ? 'orange' : 'green'};
   @media(min-width: 640px) {
    order: 3;
   }
@@ -122,18 +127,23 @@ class EventDetails extends PureComponent {
   }
 
   render() {
-    const { event, tickets, history, user } = this.props
+    const { event, tickets, user } = this.props
     const { backdropOpen } = this.state
     const hasTickets = tickets.length
-    const renderTickets = hasTickets && tickets.map((ticket, i) => (
-      <Ticket key={i} onClick={() => history.push(`/events/${event.id}/tickets/${ticket.id}`)}>
+    if (!event) return null
+    const renderTickets = hasTickets && tickets.map((ticket, i) => {
+      const risk = ticket.risk > 35 ? 'moderate' : ticket.risk > 65 ? 'high' : 'low'
+      return (
+        <Ticket key={i}>
+        <StyledLink to={`/events/${event.id}/tickets/${ticket.id}`}>
         <Seller>{ticket.user.firstName}</Seller>
         <TicketInfo>{ticket.description}</TicketInfo>
-        <Price>${ticket.price}</Price>
+        <Price risk={risk}>${ticket.price}</Price>
+        </StyledLink>
       </Ticket>
-    ))
+      )
+    })
 
-    if (!event) return null
 
     return (
       <React.Fragment>
@@ -151,7 +161,7 @@ class EventDetails extends PureComponent {
                   <Subtitle>Tickets</Subtitle>
                   {user && <PlusButton onClick={this.toggleBackdrop} />}
                 </Toolbar>
-                {hasTickets ? renderTickets : <Description>No tickets yet</Description>}
+                {hasTickets ? <ul>{renderTickets}</ul> : <Description>No tickets yet</Description>}
               </StyledWrapper>
               {user && backdropOpen &&
                 <AddTicket onSubmit={this.createTicket} close={this.toggleBackdrop} open={backdropOpen} />

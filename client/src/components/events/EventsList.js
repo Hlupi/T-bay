@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { getAllEvents, createEvent } from '../../actions/events'
@@ -16,7 +17,7 @@ const Toolbar = styled.div`
   padding: 10px 0;
 `
 
-const Cards = styled.article`
+const Cards = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -34,16 +35,14 @@ const Thumb = styled.div`
   transition: transform .3s linear;
 `
 
-const Card = styled.div`
+const Card = styled.li`
   margin-bottom: 20px;
   flex-basis: 100%;
   flex-shrink: 0;
   flex-grow: 0;
-  display: flex;
   background: #ffffff;
   border-radius: 10px;
   overflow: hidden;
-  cursor: pointer;
   &:hover {
     & ${Thumb} {
       transform: scale(1.2);
@@ -54,6 +53,19 @@ const Card = styled.div`
     flex-wrap: wrap;    
     &:not(:nth-child(3n)) {
       margin-right: 20px;
+      flex-basis: calc(33.3333% - 20px);
+    }
+    &:nth-child(3n) {
+      flex-basis: 33.3333%;
+    }
+  }
+`
+
+const StyledLink = styled(Link)`
+  display: flex;
+  @media(min-width: 640px) {
+    flex-wrap: wrap;    
+    &:not(:nth-child(3n)) {
       flex-basis: calc(33.3333% - 20px);
     }
     &:nth-child(3n) {
@@ -127,7 +139,8 @@ class EventsList extends PureComponent {
     const { backdropOpen } = this.state
     const renderEvents = events.map((event, i) => {
       return (
-        <Card key={i} onClick={() => history.push(`/events/${event.id}`)}>
+        <Card key={i}>
+          <StyledLink to={`/events/${event.id}`}>
           <ThumbContainer>
             <Thumb style={{ backgroundImage: `url('${event.picture}')` }} />
           </ThumbContainer>
@@ -136,6 +149,7 @@ class EventsList extends PureComponent {
             <Description>{event.description}</Description>
             <Date>{event.starts} - {event.ends}</Date>
           </Content>
+          </StyledLink>
         </Card>
       )
     })

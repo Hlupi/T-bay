@@ -30,6 +30,8 @@ export default createGlobalStyle`
 
   a {
     cursor: pointer;
+    text-decoration: none;
+    color: inherit;
   }
 
   button {
@@ -64,7 +66,7 @@ export default createGlobalStyle`
     margin: 0;
   }
 
-  ul, ol {
+  ul, ol, li {
     margin: 0;
     padding: 0;
   }
