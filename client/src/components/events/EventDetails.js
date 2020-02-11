@@ -1,110 +1,13 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+
 
 import { getEvent } from '../../actions/events';
 import { getSelectedTickets, createTicket } from '../../actions/tickets';
 import AddTicket from '../tickets/AddTicket';
-import Wrapper from '../../fragments/Wrapper';
+import { Header } from '../../fragments/Header'
+import { Container, StyledWrapper, Date, Title, Subtitle, Description, Toolbar, Ticket, StyledLink, Seller, TicketInfo, Price } from '../../fragments/Event'
 import PlusButton from '../../fragments/Button'
-
-const Header = styled.header`
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 200px;
-  border-bottom-right-radius: 50px;
-  @media(min-width: 640px) {
-    height: 250px;
-  }
-  @media(min-width: 1024px) {
-    height: 300px;
-  }
-`
-
-const Container = styled.section`
-  padding-top: 10px;
-  position: relative;
-`
-
-const StyledWrapper = styled(Wrapper)`
-  padding-bottom: 10px;
-`
-
-const Date = styled.p`
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #514e57;
-`
-
-const Title = styled.h1`
-  font-size: 24px;
-  margin-bottom: 40px;
-  color: #FD5359;
-`
-
-const Subtitle = styled.h2`
-  ${({ addSpacing }) => addSpacing && 'margin-bottom: 10px'};
-  font-size: 18px;
-`
-
-const Description = styled.p`
-  font-size: 16px;
-  margin-bottom: 40px;
-`
-
-const Toolbar = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-`
-
-const Ticket = styled.li`
-  padding: 15px 0;
-  border-top: 1px solid #efefef;
-  border-bottom: 1px solid #efefef;
-`
-
-const StyledLink = styled(Link)`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  @media(min-width: 640px) {
-    align-items: center;
-  }
-`
-
-const Seller = styled.div`
-  padding: 0 15px;
-  background: rgba(60, 19, 211, 0.1);
-  color: #3c13d3;
-  border-radius: 10px;
-  margin-right: 20px;
-  max-height: 20px;
-  order: 1;
-  @media(max-width: 639px) {
-    margin-bottom: 15px;;
-  }
-`
-
-const TicketInfo = styled.p`
-  width: 100%;
-  order: 3;
-  @media(min-width: 640px) {
-   order: 2;
-   width: 80%;
-  }
-`
-
-const Price = styled.p`
-  margin-left: auto;
-  order: 2;
-  color: ${({ risk }) => risk === 'high' ? 'red' : risk === 'moderate' ? 'orange' : 'green'};
-  @media(min-width: 640px) {
-   order: 3;
-  }
-`
 
 
 class EventDetails extends PureComponent {

@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import { signup } from '../../actions/users'
 import SignupForm from './SignupForm'
-
-const Container = styled.div``
+import { Container } from '../../fragments/Layout'
+import Wrapper from '../../fragments/Wrapper'
 
 
 class SignupPage extends PureComponent {
@@ -21,8 +20,10 @@ class SignupPage extends PureComponent {
 
 		return (
 			<Container>
-				<SignupForm onSubmit={this.handleSubmit} />
-				<p style={{ color: 'red' }}>{this.props.signup.error}</p>
+				<Wrapper>
+					<SignupForm onSubmit={this.handleSubmit} />
+					<p style={{ color: 'red' }}>{this.props.signup.error}</p>
+				</Wrapper>
 			</Container>
 		)
 	}

@@ -4,11 +4,16 @@ import { Label, Input, Submit } from '../../fragments/Forms'
 
 
 class AddComment extends PureComponent {
-  state = {}
+  state = {
+    text: ''
+  }
 
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.onSubmit(this.state)
+    this.setState({
+      text: ''
+    })
   }
 
   handleChange = (event) => {

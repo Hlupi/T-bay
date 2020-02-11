@@ -71,3 +71,9 @@ export default createGlobalStyle`
     padding: 0;
   }
 `
+
+const colors = {
+  error: '#FD5359',
+  base:' #3c13d3',
+  grey: '#f7f7f7'
+}

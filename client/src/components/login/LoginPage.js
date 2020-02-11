@@ -5,13 +5,13 @@ import styled from 'styled-components'
 
 import { login } from '../../actions/users'
 import LoginForm from './LoginForm'
+import { Container } from '../../fragments/Layout'
+import Wrapper from '../../fragments/Wrapper'
 
-const Container = styled.div``
 
 
 class LoginPage extends PureComponent {
 	handleSubmit = (data) => {
-		console.log('hiya')
 		this.props.login(data.email, data.password)
 	}
 
@@ -22,9 +22,11 @@ class LoginPage extends PureComponent {
 
 		return (
 			<Container>
-				<LoginForm onSubmit={this.handleSubmit} />
-				{this.props.error &&
+				<Wrapper>
+					<LoginForm onSubmit={this.handleSubmit} />
+					{this.props.error &&
 					<span style={{color: 'red'}}>{this.props.error}</span>}
+					</Wrapper>
 			</Container>
 		)
 	}

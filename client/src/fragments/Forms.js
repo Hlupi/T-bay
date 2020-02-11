@@ -30,7 +30,6 @@ const SWrapper = styled(Wrapper)`
 `
 
 export const SForm = styled(Wrapper)`
-  margin-top: 10px;
   padding-top: 20px;
   padding-bottom: 20px;
   position: relative;
@@ -43,7 +42,6 @@ export const SForm = styled(Wrapper)`
 export const Title = styled.h3`
   margin-bottom: 10px;
   text-align: center;
-  color: #3c13d3;
 `
 
 export const Element = styled.div`
@@ -55,14 +53,12 @@ export const Element = styled.div`
 export const Label = styled.label`
   margin-right: ${({ auto }) => auto ? '20px' : 'auto'};
   width: ${({ auto }) => !auto && '30%'};
-  color: #3c13d3;
   `
 
 export const Input = styled.input`
   ${({ auto }) => auto && 'margin-right: 20px'};
   padding: 0px 10px;
   width: ${({ auto }) => !auto && '69%'};
-  color: #3c13d3;
   font-size: 16px;
   font-family: 'Quicksand', sans-serif;
   border: 1px solid #3c13d3;
