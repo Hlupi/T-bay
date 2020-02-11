@@ -15,8 +15,8 @@ const price = (tickets, ticket) => {
 
 const time = ticket => {
   const hours = ticket.postedAt.getHours()
-  if (hours > 8 && hours < 17) return -10
-  else return 0
+  if (hours > 8 && hours <= 17) return -10
+  else return 10
 }
 
 const user = (authorTickets) => {
@@ -24,8 +24,6 @@ const user = (authorTickets) => {
   if (tickets === 1) return 10
   else return 0
 }
-
-
 
 export const Risk = (comments, tickets, ticket, authorTickets) => {
   const minRisk = 5

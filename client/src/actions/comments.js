@@ -6,11 +6,7 @@ import { isExpired } from '../jwt'
 export const GOT_SELECTED_COMMENTS = 'GOT_SELECTED_COMMENTS'
 export const ADD_COMMENT = 'ADD_COMMENT'
 
-export const GOT_ALL_COMMENTS = 'GOT_ALL_COMMENTS'
-export const GOT_COMMENT = 'GOT_COMMENT'
-
 export const getSelectedComments = (ticketId) => (dispatch, getState) => {
-  if (getState().comments.length && getState().ticket && getState().ticket.id == ticketId) return
 
   request
     .get(`${baseUrl}/tickets/comments/${ticketId}`)
@@ -36,26 +32,4 @@ export const createComment = (comment) => (dispatch, getState) => {
       payload: response.body
     }))
     .catch(err => console.error(err))
-}
-
-
-
-export const getAllComments = () => (dispatch) => {
-  request
-    .get(`${baseUrl}/comments`)
-    .then(response => dispatch({
-      type: GOT_ALL_COMMENTS,
-      payload: response.body.comments
-    }))
-    .catch(err => alert(err))
-}
-
-export const getComment = (commentId) => (dispatch) => {
-  request
-    .get(`${baseUrl}/comments/${commentId}`)
-    .then(response => dispatch({
-      type: GOT_COMMENT,
-      payload: response.body
-    }))
-    .catch(err => alert(err))
 }

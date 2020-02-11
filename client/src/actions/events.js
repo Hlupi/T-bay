@@ -19,9 +19,7 @@ export const getAllEvents = () => (dispatch, getState) => {
     .catch(err => alert(err))
 }
 
-export const getEvent = (eventId) => (dispatch, getState) => {
-  if (getState().event && getState().event.id == eventId) return
-
+export const getEvent = (eventId) => (dispatch) => {
   request
     .get(`${baseUrl}/events/${eventId}`)
     .then(response => dispatch({

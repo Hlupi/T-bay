@@ -3,14 +3,12 @@ import { baseUrl } from '../constants'
 import { logout } from './users'
 import { isExpired } from '../jwt'
 
-export const GOT_ALL_TICKETS = 'GOT_ALL_TICKETS'
 export const GOT_SELECTED_TICKETS = 'GOT_SELECTED_TICKETS'
 export const GOT_TICKET = 'GOT_TICKET'
 export const ADD_TICKET = 'ADD_TICKET'
 export const EDIT_TICKET = 'EDIT_TICKET'
 
-export const getSelectedTickets = (eventId) => (dispatch, getState) => {
-  if (getState().tickets.length && getState().event && getState().event.id == eventId) return
+export const getSelectedTickets = (eventId) => (dispatch) => {
 
   request
     .get(`${baseUrl}/events/${eventId}/tickets/`)
@@ -21,8 +19,8 @@ export const getSelectedTickets = (eventId) => (dispatch, getState) => {
     .catch(err => alert(err))
 }
 
-export const getTicket = (eventId, ticketId) => (dispatch, getState) => {
-  if (getState().ticket && getState().ticket.id == ticketId) return
+export const getTicket = (eventId, ticketId) => (dispatch) => {
+
   request
     .get(`${baseUrl}/events/${eventId}/tickets/${ticketId}`)
     .then(response => dispatch({
@@ -52,6 +50,7 @@ export const createTicket = (ticket) => (dispatch, getState) => {
 export const editTicket = (ticketId, updates) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
+  const risk = state.ticket.risk
 
   request
     .put(`${baseUrl}/tickets/${ticketId}`)
@@ -59,6 +58,6 @@ export const editTicket = (ticketId, updates) => (dispatch, getState) => {
     .send(updates)
     .then(response => dispatch({
       type: EDIT_TICKET,
-      payload: response.body
+      payload: { ...response.body, risk }
     }))
 }
