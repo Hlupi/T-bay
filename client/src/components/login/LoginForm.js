@@ -1,37 +1,55 @@
 import React, { PureComponent } from 'react'
+import * as Yup from 'yup'
 
-import { SForm, Title, Element, Label, Input, Submit } from '../../fragments/Forms'
+import Form from '../../fragments/Forms'
+
+
+const LoginSchema = Yup.object({
+  email: Yup.string()
+    .email('This looks like an invalid email')
+    .required('Please fill in your email adress'),
+  password: Yup.string()
+    .required('Password is required')
+})
+
+const initialValues = {
+  email: '',
+  password: ''
+}
 
 
 export default class LoginForm extends PureComponent {
 	state = {}
 
-	handleSubmit = (e) => {
-		e.preventDefault()
-		this.props.onSubmit(this.state)
-	}
-
-	handleChange = (event) => {
-		const { name, value } = event.target
-		this.setState({
-			[name]: value
-		})
+	handleSubmit = (data) => {
+		this.props.onSubmit(data)
 	}
 
 	render() {
+		const fields = [
+			{
+				label: 'Email',
+				name: 'email',
+				type: 'email',
+				autoComplete: "username"
+			},	
+			{
+				label: 'Password',
+				name: 'password',
+				type: 'password',
+				autoComplete: "current-password"
+			},
+		]
 		return (
-			<SForm onSubmit={this.handleSubmit} as="form">
-				<Title>Welcome back</Title>
-				<Element>
-					<Label htmlFor="email">Email</Label>
-					<Input type="email" name="email" value={this.state.email || ''} onChange={this.handleChange} />
-				</Element>
-				<Element>
-					<Label htmlFor="password">Password</Label>
-					<Input type="password" name="password" value={this.state.password || ''} onChange={this.handleChange} autocomplete="current-password" />
-				</Element>
-				<Submit type="submit" center>Login</Submit>
-			</SForm>
+			<Form
+				initialValues={initialValues}
+				validationSchema={LoginSchema}
+				handleSubmit={this.handleSubmit}
+        title="Welcome back"
+        fields={fields}
+				button="Login"
+				formError={this.props.formError}
+			/>
 		)
 	}
 }

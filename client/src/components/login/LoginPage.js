@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import { login } from '../../actions/users'
 import LoginForm from './LoginForm'
@@ -16,6 +15,8 @@ class LoginPage extends PureComponent {
 	}
 
 	render() {
+		const { error } = this.props
+
 		if (this.props.currentUser) return (
 			<Redirect to="/" />
 		)
@@ -23,9 +24,7 @@ class LoginPage extends PureComponent {
 		return (
 			<Container>
 				<Wrapper>
-					<LoginForm onSubmit={this.handleSubmit} />
-					{this.props.error &&
-					<span style={{color: 'red'}}>{this.props.error}</span>}
+					<LoginForm onSubmit={this.handleSubmit} formError={error} />
 					</Wrapper>
 			</Container>
 		)

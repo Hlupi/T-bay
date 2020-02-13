@@ -1,5 +1,6 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
+import { Formik } from 'formik'
 
 import Wrapper from './Wrapper'
 import Button from './Button'
@@ -40,14 +41,18 @@ export const SForm = styled(Wrapper)`
 `
 
 export const Title = styled.h3`
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   text-align: center;
 `
 
 export const Element = styled.div`
-  margin-bottom: 10px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  min-height: 45px;
+  &:not(:last-of-type) {
+    margin-bottom: 10px;
+  }
   `
 
 export const Label = styled.label`
@@ -66,6 +71,7 @@ export const Input = styled.input`
 `
 
 export const Submit = styled.button`
+  margin-top: 20px;
   padding: 0 15px;
   border-radius: 10px;
   background: rgba(60, 19, 211, 0.1);
@@ -79,28 +85,91 @@ export const Submit = styled.button`
   `};
 `
 
+const fadeIn = keyframes`
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+`
+
+const fadeOut = keyframes`
+  from {
+    opacity:1;
+  }
+  to {
+    opacity: 0;
+  }
+`
+
+const Error = styled.p`
+  animation: ${({ visible }) => visible ? css`${fadeIn} 1s ease-out` : css`${fadeOut} 1s ease-out`};
+  width: 68%;
+  margin-left: auto;
+  color: #FD5359;
+`
+
 const Form = (props) => {
-  const { onClick, onSubmit, title, fields, onChange, button, open } = props
-  const renderFields = fields && fields.map((field, i) => {
-    return (
-      <Element key={i}>
-        <Label htmlFor={field.name}>{field.label}</Label>
-        <Input name={field.name} id={field.name} value={field.value} type={field.type} onChange={onChange} />
-      </Element>
-    )
-  })
-  return (
-    <Container>
-      <Backdrop onClick={onClick} />
-      <SWrapper>
-      <Button onClick={onClick} open={open} />
-      <SForm as='form' onSubmit={onSubmit}>
+  const { onClick, handleSubmit, title, fields, onChange, button, open, overlaying, initialValues, validationSchema, formError } = props
+
+  const FormEssentials = (
+    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values, { setSubmitting }) => {
+      handleSubmit(values)
+     }}>
+      {props => {
+        const {
+       values,
+       touched,
+       errors,
+       dirty,
+       isSubmitting,
+       handleChange,
+       handleBlur,
+       handleSubmit,
+       handleReset, 
+       isValidating
+    } = props
+    const renderFields = fields.length && fields.map((field, i) => {
+      const fieldError = isSubmitting && formError && !!~formError.toLowerCase().indexOf(field.name)
+      const hasErrors = errors[field.name]
+      const wasTouched = touched[field.name]
+      return (
+        <Element key={i}>
+          <Label htmlFor={field.name}>{field.label}</Label>
+          <Input name={field.name} id={field.name} value={values[field.name]}  onChange={handleChange} type={field.type} autoComplete={field.autoComplete && field.autoComplete} onBlur={handleBlur} />
+          {hasErrors ? wasTouched && 
+          <Error visible={hasErrors && wasTouched}>{hasErrors}</Error> 
+          : fieldError && 
+          <Error visible={isSubmitting && fieldError}>{formError}</Error>
+          }
+        </Element>
+      )
+    })
+
+      return (
+      <SForm as='form' onSubmit={handleSubmit}>
         <Title>{title}</Title>
         {renderFields}
         <Submit type="submit" center>{button}</Submit>
       </SForm>
+      )}
+}
+    </Formik>
+  )
+
+  if(overlaying) return (
+    <Container>
+      <Backdrop onClick={onClick} />
+      <SWrapper>
+      <Button onClick={onClick} open={open} />
+      {FormEssentials}
       </SWrapper>
     </Container>
+  )
+
+  return (
+    FormEssentials
   )
 }
 

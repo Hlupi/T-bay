@@ -14,15 +14,15 @@ class SignupPage extends PureComponent {
 	}
 
 	render() {
-		if (this.props.signup.success) return (
+		const { error, success } = this.props
+		if (success) return (
 			<Redirect to="/login" />
 		)
 
 		return (
 			<Container>
 				<Wrapper>
-					<SignupForm onSubmit={this.handleSubmit} />
-					<p style={{ color: 'red' }}>{this.props.signup.error}</p>
+					<SignupForm onSubmit={this.handleSubmit} formError={error} />
 				</Wrapper>
 			</Container>
 		)
@@ -31,7 +31,8 @@ class SignupPage extends PureComponent {
 
 const mapStateToProps = function (state) {
 	return {
-		signup: state.signup
+		error: state.signup.error,
+		success: state.signup.success
 	}
 }
 
