@@ -8,6 +8,7 @@ import event from './event'
 import tickets from './tickets'
 import ticket from './ticket'
 import comments from './comments'
+import isAdmin from './isAdmin'
 
 export default combineReducers({
   users,
@@ -18,5 +19,6 @@ export default combineReducers({
   event,
   tickets,
   ticket,
-  comments
+  comments,
+  isAdmin
 })

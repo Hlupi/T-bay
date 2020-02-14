@@ -11,6 +11,10 @@ export default class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
+  @Column('boolean',  { nullable: true })
+  @Exclude({ toPlainOnly: true })
+  admin: boolean;
+
   @IsString()
   @MinLength(2)
   @Column("text", { nullable: false })

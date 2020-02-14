@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux'
 
 import GlobalStyles from './styles'
 import LoginPage from './components/login/LoginPage'
@@ -9,8 +10,21 @@ import TopBar from './components/layout/TopBar'
 import EventsList from './components/events/EventsList'
 import EventDetails from './components/events/EventDetails'
 import TicketDetails from './components/tickets/TicketDetails'
+import { getAdmin } from './actions/users'
 
 class App extends Component {
+  componentDidMount() {
+    this.props.getAdmin(this.props.currentUser)
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.currentUser !== prevProps.currentUser) {
+      console.log('NOW', this.props.currentUser)
+      console.log('PREV', prevProps.currentUser)
+      this.props.getAdmin(this.props.currentUser)
+    }
+  } 
+
   render() {
     return (
       <Router>
@@ -32,4 +46,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    currentUser: state.currentUser && state.currentUser.jwt
+  }
+}
+
+export default connect(mapStateToProps, { getAdmin })(App);

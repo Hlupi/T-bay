@@ -1,5 +1,6 @@
 import * as request from 'superagent'
 import { baseUrl } from '../constants'
+import { userId } from '../jwt'
 
 export const ADD_USER = 'ADD_USER'
 export const UPDATE_USER = 'UPDATE_USER'
@@ -12,6 +13,8 @@ export const USER_LOGOUT = 'USER_LOGOUT'
 
 export const USER_SIGNUP_SUCCESS = 'USER_SIGNUP_SUCCESS'
 export const USER_SIGNUP_FAILED = 'USER_SIGNUP_FAILED'
+
+export const CHECK_ADMIN = 'CHECK_ADMIN'
 
 export const logout = () => ({
   type: USER_LOGOUT
@@ -34,6 +37,11 @@ const userSignupFailed = (error) => ({
 
 const userSignupSuccess = () => ({
   type: USER_SIGNUP_SUCCESS
+})
+
+const checkAdmin = (admin) => ({
+  type: CHECK_ADMIN,
+  payload: admin
 })
 
 export const login = (email, password) => (dispatch) =>
@@ -65,4 +73,17 @@ export const signup = (firstName, lastName, email, password) => (dispatch) =>
         console.error(err)
       }
     })
+
+export const getAdmin = (currentUser) => (dispatch, getState) => {
+  const state = getState()
+  if (!state.currentUser) return
+  const jwt = state.currentUser.jwt
+  const user = userId(currentUser)
+
+  request
+    .get(`${baseUrl}/users/${user}`)
+    .set('Authorization', `Bearer ${jwt}`)
+    .then(response => dispatch(checkAdmin(response.body)))
+    .catch(err => console.error(err))
+}
     
