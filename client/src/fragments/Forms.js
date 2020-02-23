@@ -103,18 +103,26 @@ const fadeOut = keyframes`
   }
 `
 
-const Error = styled.p`
+export const Error = styled.p`
   animation: ${({ visible }) => visible ? css`${fadeIn} 1s ease-out` : css`${fadeOut} 1s ease-out`};
   width: 68%;
   margin-left: auto;
   color: #FD5359;
+
+  ${({comment}) => comment && css`
+  width: auto;
+  margin-left: 0;
+  @media(min-width: 640px) {
+    margin-left: 100px;
+  }
+  `};
 `
 
 const Form = (props) => {
   const { onClick, handleSubmit, title, fields, onChange, button, open, overlaying, initialValues, validationSchema, formError } = props
 
   const FormEssentials = (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values, { setSubmitting }) => {
+    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => {
       handleSubmit(values)
      }}>
       {props => {

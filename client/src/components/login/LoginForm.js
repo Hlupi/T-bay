@@ -5,16 +5,16 @@ import Form from '../../fragments/Forms'
 
 
 const LoginSchema = Yup.object({
-  email: Yup.string()
-    .email('This looks like an invalid email')
-    .required('Please fill in your email adress'),
-  password: Yup.string()
-    .required('Password is required')
+	email: Yup.string()
+		.email('This looks like an invalid email')
+		.required('Please fill in your email adress'),
+	password: Yup.string()
+		.required('Password is required')
 })
 
 const initialValues = {
-  email: '',
-  password: ''
+	email: '',
+	password: ''
 }
 
 
@@ -32,7 +32,7 @@ export default class LoginForm extends PureComponent {
 				name: 'email',
 				type: 'email',
 				autoComplete: "username"
-			},	
+			},
 			{
 				label: 'Password',
 				name: 'password',
@@ -45,10 +45,10 @@ export default class LoginForm extends PureComponent {
 				initialValues={initialValues}
 				validationSchema={LoginSchema}
 				handleSubmit={this.handleSubmit}
-        title="Welcome back"
-        fields={fields}
-				button="Login"
+				fields={fields}
 				formError={this.props.formError}
+				title="Welcome back"
+				button="Login"
 			/>
 		)
 	}

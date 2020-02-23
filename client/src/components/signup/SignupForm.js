@@ -1,29 +1,28 @@
 import React, { PureComponent } from 'react'
 import * as Yup from 'yup'
 
-
 import Form from '../../fragments/Forms'
 
 
 const SignupSchema = Yup.object({
 	firstName: Yup.string()
-	.required("We'd like to know your name"),
+		.required("We'd like to know your name"),
 	lastName: Yup.string()
-	.required('For formal occasions'),
-  email: Yup.string()
-    .email('This looks like an invalid email')
-    .required('Please fill in your email adress'),
-  password: Yup.string()
+		.required('For formal occasions'),
+	email: Yup.string()
+		.email('This looks like an invalid email')
+		.required('Please fill in your email adress'),
+	password: Yup.string()
 		.required('Password is required'),
 	confirmPassword: Yup.string()
-	.oneOf([Yup.ref('password'), null], "Passwords do not match")
-	.required('Please repeat your password')
+		.oneOf([Yup.ref('password'), null], "Passwords do not match")
+		.required('Please repeat your password')
 })
 
 const initialValues = {
 	firstName: '',
 	lastName: '',
-  email: '',
+	email: '',
 	password: '',
 	confirmPassword: ''
 }
@@ -42,7 +41,7 @@ export default class SignupForm extends PureComponent {
 				label: 'First Name',
 				name: 'firstName',
 				type: 'text',
-			},	
+			},
 			{
 				label: 'Last name',
 				name: 'lastName',
@@ -53,7 +52,7 @@ export default class SignupForm extends PureComponent {
 				name: 'email',
 				type: 'email',
 				autoComplete: "username"
-			},	
+			},
 			{
 				label: 'Password',
 				name: 'password',
@@ -73,10 +72,10 @@ export default class SignupForm extends PureComponent {
 				initialValues={initialValues}
 				validationSchema={SignupSchema}
 				handleSubmit={this.handleSubmit}
-        title="Join us!"
-        fields={fields}
-				button="Signup"
+				fields={fields}
 				formError={this.props.formError}
+				title="Join us!"
+				button="Signup"
 			/>
 		)
 	}

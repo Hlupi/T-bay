@@ -1,54 +1,65 @@
 import React, { PureComponent } from 'react'
+import * as Yup from 'yup'
 
 import Form from '../../fragments/Forms'
+
+
+const TicketSchema = Yup.object({
+  picture: Yup.string()
+    .url('This looks like an invalid url')
+    .required('Please fill in the image url'),
+    description: Yup.string()
+    .required('Please provide a small description'),
+    price: Yup.number()
+    .required('Please indicate the asking price')
+})
+
+const initialValues = {
+  picture: '',
+  description: '',
+  price: ''
+}
 
 
 class AddTicket extends PureComponent {
   state = {}
 
-  handleSubmit = (e) => {
-    e.preventDefault()
-    this.props.onSubmit(this.state)
-  }
-
-  handleChange = (event) => {
-    const { name, value } = event.target
-    this.setState({
-      [name]: value
-    })
+  handleSubmit = (data) => {
+    this.props.onSubmit(data)
+    this.props.close()
   }
 
   render() {
-    const initialValues = this.props.initialValues || {}
     const fields = [
       {
         label: 'Picture (url):',
         name: 'picture',
-        type: 'text',
-        value: this.state.picture !== undefined ? this.state.picture : initialValues.picture || ''
+        type: 'text'
       },
       {
         label: 'Description:',
         name: 'description',
-        type: 'text',
-        value: this.state.description !== undefined ? this.state.description : initialValues.description || ''
+        type: 'text'
       },
       {
         label: 'Price:',
         name: 'price',
-        type: 'text',
-        value: this.state.price !== undefined ? this.state.price : initialValues.price || ''
+        type: 'number'
       },
     ]
+
     return (
       <Form
+        initialValues={this.props.initialValues ? this.props.initialValues :initialValues}
+        validationSchema={TicketSchema}
         onClick={this.props.close}
-        onSubmit={this.handleSubmit}
-        title="Add a ticket"
+        handleSubmit={this.handleSubmit}
         fields={fields}
-        onChange={this.handleChange}
+        open={this.props.open}
+        title={this.props.title ? this.props.title : "Add a ticket"}
         button="Post"
-        open={this.props.open} />
+        overlaying
+      />
     )
   }
 }

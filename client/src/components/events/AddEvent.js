@@ -1,67 +1,80 @@
 import React, { PureComponent } from 'react'
+import * as Yup from 'yup'
 
 import Form from '../../fragments/Forms'
 
 
+const EventSchema = Yup.object({
+  name: Yup.string()
+    .min(2, 'Event name should be at least 2 letters long')
+    .required('Please fill in the name'),
+  description: Yup.string()
+    .required('Please provide a small description'),
+  picture: Yup.string()
+    .url('This looks like an invalid url')
+    .required('Please fill in the image url'),
+  starts: Yup.date()
+    .required('Please indicate starting date'),
+  ends: Yup.date()
+    .required('Please indicate ending date')
+})
+
+const initialValues = {
+  name: '',
+  description: '',
+  picture: '',
+  starts: '',
+  ends: ''
+}
+
+
 class AddEvent extends PureComponent {
-  state = {}
-
-  handleSubmit = (e) => {
-    e.preventDefault()
-    this.props.onSubmit(this.state)
-  }
-
-  handleChange = (event) => {
-    const { name, value } = event.target
-    this.setState({
-      [name]: value
-    })
+  handleSubmit = (event) => {
+    this.props.onSubmit(event)
+    this.props.close()
   }
 
   render() {
-    const initialValues = this.props.initialValues || {}
     const fields = [
       {
         label: 'Name:',
         name: 'name',
-        type: 'text',
-        value: this.state.name !== undefined ? this.state.name : initialValues.name || ''
+        type: 'text'
       },
       {
         label: 'Description:',
         name: 'description',
-        type: 'text',
-        value: this.state.description !== undefined ? this.state.description : initialValues.description || ''
+        type: 'text'
       },
       {
         label: 'Picture (url):',
         name: 'picture',
-        type: 'text',
-        value: this.state.picture !== undefined ? this.state.picture : initialValues.picture || ''
+        type: 'text'
       },
       {
         label: 'Start Date:',
         name: 'starts',
-        type: 'date',
-        value: this.state.starts !== undefined ? this.state.starts : initialValues.starts || ''
+        type: 'date'
       },
       {
         label: 'End Date:',
         name: 'ends',
-        type: 'date',
-        value: this.state.ends !== undefined ? this.state.ends : initialValues.ends || ''
+        type: 'date'
       }
     ]
 
     return (
-      <Form 
+      <Form
+        initialValues={this.props.initialValues ? this.props.initialValues : initialValues}
+        validationSchema={EventSchema}
         onClick={this.props.close}
-        onSubmit={this.handleSubmit}
-        title="Add event"
+        handleSubmit={this.handleSubmit}
         fields={fields}
-        onChange={this.handleChange}
-        button="Create"
-        open={this.props.open} />
+        open={this.props.open}
+        title={this.props.title ? this.props.title : "Add an event"}
+        button="Post"
+        overlaying
+      />
     )
   }
 }
