@@ -6,6 +6,8 @@ import { isExpired } from '../jwt'
 export const GOT_ALL_EVENTS = 'GOT_ALL_EVENTS'
 export const GOT_EVENT = 'GOT_EVENT'
 export const ADD_EVENT = 'ADD_EVENT'
+export const EDIT_EVENT = 'EDIT_EVENT'
+export const DELETE_EVENT = 'DELETE_EVENT'
 
 export const getAllEvents = () => (dispatch, getState) => {
   if (getState().events.length) return
@@ -44,4 +46,33 @@ export const createEvent = (event) => (dispatch, getState) => {
       payload: response.body
     }))
     .catch(err => console.error(err))
+}
+
+export const updateEvent = (eventId, updates) => (dispatch, getState) => {
+  const state = getState()
+  const jwt = state.currentUser.jwt
+
+  request
+  .put(`${baseUrl}/events/${eventId}`)
+  .set('Authorization', `Bearer ${jwt}`)
+  .send(updates)
+  .then(response => 
+    dispatch({
+    type: EDIT_EVENT,
+    payload: response.body
+  })
+  )
+}
+
+export const deleteEvent = (eventId)  => (dispatch, getState) => {
+  const state = getState()
+  const jwt = state.currentUser.jwt
+
+  request
+  .delete(`${baseUrl}/events/${eventId}`)
+  .set('Authorization', `Bearer ${jwt}`)
+  .then(response => dispatch({
+    type: DELETE_EVENT,
+    payload: eventId
+  }))
 }

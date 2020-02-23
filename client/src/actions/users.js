@@ -84,6 +84,13 @@ export const getAdmin = (currentUser) => (dispatch, getState) => {
     .get(`${baseUrl}/users/${user}`)
     .set('Authorization', `Bearer ${jwt}`)
     .then(response => dispatch(checkAdmin(response.body)))
-    .catch(err => console.error(err))
+    .catch(err => {
+      if (err.status === 400) {
+        dispatch(logout())
+      }
+      else {
+        console.error(err)
+      }
+    })
 }
     

@@ -19,8 +19,6 @@ class App extends Component {
 
   componentDidUpdate(prevProps) {
     if(this.props.currentUser !== prevProps.currentUser) {
-      console.log('NOW', this.props.currentUser)
-      console.log('PREV', prevProps.currentUser)
       this.props.getAdmin(this.props.currentUser)
     }
   } 

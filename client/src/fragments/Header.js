@@ -12,7 +12,6 @@ export const Header = styled.header`
   }
   ` : css`
     background-position: center;
-    border-bottom-right-radius: 50px;
     height: 200px;
     @media(min-width: 640px) {
       height: 250px;

@@ -29,6 +29,7 @@ export const Thumb = styled.div`
 
 export const Card = styled.li`
   margin-bottom: 20px;
+  position: relative;
   flex-basis: 100%;
   flex-shrink: 0;
   flex-grow: 0;

@@ -1,4 +1,4 @@
-import { JsonController, Get, Param, Body, Post, HttpCode, CurrentUser, Authorized } from 'routing-controllers'
+import { JsonController, Get, Param, Body, Post, HttpCode, CurrentUser, Authorized, Put, NotFoundError, ForbiddenError, Delete } from 'routing-controllers'
 import Event from './entity'
 import User from '../users/entity';
 
@@ -26,8 +26,37 @@ export default class EventController {
         @Body() event: Event,
     ) {
         if(user instanceof User) event.user = user
+        const newEvent = await event.save()
+
+        return newEvent
+    }
+
+    @Authorized()
+    @Put('/events/:id([0-9]+)')
+    async updateEvent(
+        @CurrentUser() user: User,
+        @Param('id') id: number,
+        @Body() update: Partial<Event>
+    ) {
+        const event = await Event.findOne(id)
+        if(!event) throw new NotFoundError("Can't find event")
+
+        if(!user.admin) throw new ForbiddenError("Only admins may edit events.")
+
+        return Event.merge(event, update).save()
+    }
+
+    @Authorized()
+    @Delete('/events/:id([0-9]+)')
+    async deleteEvent(
+        @CurrentUser() user: User,
+        @Param('id') id: number
+    ) {
+        const event = await Event.findOne(id)
+        if(!event) throw new NotFoundError('Event not found!')
+
+        if(!user.admin) throw new ForbiddenError("Only admins may delete events.")
         
-        
-        return event.save()
+        return Event.remove(event)
     }
 }

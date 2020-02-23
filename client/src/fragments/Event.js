@@ -19,7 +19,7 @@ export const Date = styled.p`
 
 export const Title = styled.h1`
   font-size: 24px;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
 `
 
 export const Subtitle = styled.h2`
@@ -36,9 +36,11 @@ export const Toolbar = styled.div`
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `
 
 export const Ticket = styled.li`
+  position: relative;
   padding: 15px 0;
   border-top: 1px solid #efefef;
   &:last-child {
@@ -61,7 +63,7 @@ export const Seller = styled.div`
   border-radius: 10px;
   margin-right: 20px;
   max-height: 20px;
-  order: 1;
+  /* order: 0; */
   width: 80px;
   text-align: center;
   @media(max-width: 639px) {
@@ -71,16 +73,16 @@ export const Seller = styled.div`
 
 export const TicketInfo = styled.p`
   width: 100%;
-  order: 3;
+  /* order: 2; */
   @media(min-width: 640px) {
-   order: 2;
+   /* order: 1; */
    width: 80%;
   }
 `
 
 export const Price = styled.p`
   margin-left: auto;
-  order: 2;
+  order: 0;
   color: ${({ risk }) => risk === 'high' ? 'red' : risk === 'moderate' ? 'orange' : 'green'};
   @media(min-width: 640px) {
    order: 3;

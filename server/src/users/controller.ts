@@ -19,10 +19,11 @@ export default class UserController {
 
   @Authorized()
   @Get('/users/:id([0-9]+)')
-  getUser(
+  async getUser(
     @Param('id') id: number
   ) {
-    return User.findOne(id)
+    const user = await User.findOne(id)
+    return user!.admin
   }
 
   @Authorized()
