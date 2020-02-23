@@ -5,6 +5,7 @@ import { isExpired } from '../jwt'
 
 export const GOT_SELECTED_COMMENTS = 'GOT_SELECTED_COMMENTS'
 export const ADD_COMMENT = 'ADD_COMMENT'
+export const DELETE_COMMENT = 'DELETE_COMMENT'
 
 export const getSelectedComments = (ticketId) => (dispatch, getState) => {
 
@@ -32,4 +33,17 @@ export const createComment = (comment) => (dispatch, getState) => {
       payload: response.body
     }))
     .catch(err => console.error(err))
+}
+
+export const deleteComment = (id) =>  (dispatch, getState) => {
+  const state = getState()
+  const jwt = state.currentUser.jwt
+
+  request
+  .delete(`${baseUrl}/comments/${id}`)
+  .set('Authorization', `Bearer ${jwt}`)
+  .then(response => dispatch({
+    type: DELETE_COMMENT,
+    payload: id
+  }))
 }
