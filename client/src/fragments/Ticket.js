@@ -97,14 +97,15 @@ export const Author = styled.div`
 `
 
 export const Content = styled.p`
-  width: 80%;
+  width: ${({ admin }) => admin ? 'calc(80% - 100px)' :' 80%' };
 `
 
 export const Button = styled.button`
   padding: 0 15px;
   border-radius: 10px;
-  background: rgba(60, 19, 211, 0.1);
+  background: ${({ white }) => white ? 'rgba(255, 255, 255, 0.9)' : 'rgba(60, 19, 211, 0.1)'};
   color: #3c13d3;
   font-size: 16px;
   font-family: 'Quicksand', sans-serif;
+  max-height: 20px;
 `

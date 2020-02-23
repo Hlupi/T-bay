@@ -7,6 +7,7 @@ export const GOT_SELECTED_TICKETS = 'GOT_SELECTED_TICKETS'
 export const GOT_TICKET = 'GOT_TICKET'
 export const ADD_TICKET = 'ADD_TICKET'
 export const EDIT_TICKET = 'EDIT_TICKET'
+export const DELETE_TICKET = 'DELETE_TICKET'
 
 export const getSelectedTickets = (eventId) => (dispatch) => {
 
@@ -60,4 +61,17 @@ export const editTicket = (ticketId, updates) => (dispatch, getState) => {
       type: EDIT_TICKET,
       payload: { ...response.body, risk }
     }))
+}
+
+export const deleteTicket = (ticketId) => (dispatch, getState) => {
+  const state = getState()
+  const jwt = state.currentUser.jwt
+
+  request
+  .delete(`${baseUrl}/tickets/${ticketId}`)
+  .set('Authorization', `Bearer ${jwt}`)
+  .then(response => dispatch({
+    type: DELETE_TICKET,
+    payload: ticketId
+  }))
 }

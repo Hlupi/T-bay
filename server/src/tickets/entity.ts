@@ -29,7 +29,7 @@ export default class Ticket extends BaseEntity {
   @OneToMany(_ => Comment, comment => comment.ticket)
   comments: Comment[]
 
-  @ManyToOne(_ => Event, event => event.tickets)
+  @ManyToOne(_ => Event, event => event.tickets, { onDelete: "CASCADE" })
   event: Event
 
   @ManyToOne(_ => User, user => user.tickets, {eager:true})
