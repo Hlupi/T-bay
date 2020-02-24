@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { getAllEvents, createEvent, updateEvent, deleteEvent } from '../../actions/events'
-import AddEvent from './AddEvent';
-import Wrapper from '../../fragments/Wrapper'
 import { Header } from '../../fragments/Header'
+import Wrapper from '../../fragments/Wrapper'
+import EventForm from './EventForm';
 import PlusButton from '../../fragments/Button'
 import { Container, Toolbar, Cards, Thumb, Card, StyledLink, ThumbContainer, Content, Title, Description, Date } from '../../fragments/Events'
 import { Button } from '../../fragments/Ticket'
@@ -105,10 +105,10 @@ class EventsList extends PureComponent {
               {renderEvents}
             </Cards>
             {isAdmin && adding && 
-              <AddEvent onSubmit={this.addEvent} close={this.toggleAdding} open={adding} />
+              <EventForm onSubmit={this.addEvent} close={this.toggleAdding} open={adding} />
             }
             {isAdmin && editing &&
-              <AddEvent title="Edit this event" initialValues={eventToEdit} onSubmit={this.editEvent} close={this.toggleEditing} open={editing} />
+              <EventForm title="Edit this event" initialValues={eventToEdit} onSubmit={this.editEvent} close={this.toggleEditing} open={editing} />
             }
           </Wrapper>
         </Container>

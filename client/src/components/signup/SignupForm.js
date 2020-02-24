@@ -3,7 +3,6 @@ import * as Yup from 'yup'
 
 import Form from '../../fragments/Forms'
 
-
 const SignupSchema = Yup.object({
 	firstName: Yup.string()
 		.required("We'd like to know your name"),
@@ -29,7 +28,6 @@ const initialValues = {
 
 
 export default class SignupForm extends PureComponent {
-	state = {}
 
 	handleSubmit = (data) => {
 		this.props.onSubmit(data)

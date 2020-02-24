@@ -3,9 +3,9 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { login } from '../../actions/users'
-import LoginForm from './LoginForm'
 import { Container } from '../../fragments/Layout'
 import Wrapper from '../../fragments/Wrapper'
+import LoginForm from './LoginForm'
 
 
 
@@ -25,7 +25,7 @@ class LoginPage extends PureComponent {
 			<Container>
 				<Wrapper>
 					<LoginForm onSubmit={this.handleSubmit} formError={error} />
-					</Wrapper>
+				</Wrapper>
 			</Container>
 		)
 	}

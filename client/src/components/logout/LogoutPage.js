@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom'
 
 import { logout } from '../../actions/users'
 
+
 class LogoutPage extends PureComponent {
 	componentWillMount() {
 		this.props.logout()
@@ -22,8 +23,4 @@ class LogoutPage extends PureComponent {
 	}
 }
 
-const mapStateToProps = state => ({
-	authenticated: state.currentUser !== null
-})
-
-export default connect(mapStateToProps, { logout })(LogoutPage)
+export default connect(null, { logout })(LogoutPage)

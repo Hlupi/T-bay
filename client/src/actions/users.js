@@ -2,10 +2,6 @@ import * as request from 'superagent'
 import { baseUrl } from '../constants'
 import { userId } from '../jwt'
 
-export const ADD_USER = 'ADD_USER'
-export const UPDATE_USER = 'UPDATE_USER'
-export const UPDATE_USERS = 'UPDATE_USERS'
-
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS'
 export const USER_LOGIN_FAILED = 'USER_LOGIN_FAILED'
 

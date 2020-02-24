@@ -3,7 +3,6 @@ import * as Yup from 'yup'
 
 import Form from '../../fragments/Forms'
 
-
 const EventSchema = Yup.object({
   name: Yup.string()
     .min(2, 'Event name should be at least 2 letters long')
@@ -28,7 +27,7 @@ const initialValues = {
 }
 
 
-class AddEvent extends PureComponent {
+class EventForm extends PureComponent {
   handleSubmit = (event) => {
     this.props.onSubmit(event)
     this.props.close()
@@ -79,4 +78,4 @@ class AddEvent extends PureComponent {
   }
 }
 
-export default AddEvent
+export default EventForm

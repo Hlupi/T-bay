@@ -8,7 +8,6 @@ export const ADD_COMMENT = 'ADD_COMMENT'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
 
 export const getSelectedComments = (ticketId) => (dispatch, getState) => {
-
   request
     .get(`${baseUrl}/tickets/comments/${ticketId}`)
     .then(response => dispatch({

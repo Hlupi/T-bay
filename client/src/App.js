@@ -6,7 +6,7 @@ import GlobalStyles from './styles'
 import LoginPage from './components/login/LoginPage'
 import LogoutPage from './components/logout/LogoutPage'
 import SignupPage from './components/signup/SignupPage'
-import TopBar from './components/layout/TopBar'
+import Navigation from './components/layout/Navigation'
 import EventsList from './components/events/EventsList'
 import EventDetails from './components/events/EventDetails'
 import TicketDetails from './components/tickets/TicketDetails'
@@ -28,7 +28,7 @@ class App extends Component {
       <Router>
         <React.Fragment>
           <GlobalStyles />
-          <TopBar />
+          <Navigation />
           <main>
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/logout" component={LogoutPage} />

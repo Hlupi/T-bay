@@ -3,9 +3,9 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { signup } from '../../actions/users'
-import SignupForm from './SignupForm'
 import { Container } from '../../fragments/Layout'
 import Wrapper from '../../fragments/Wrapper'
+import SignupForm from './SignupForm'
 
 
 class SignupPage extends PureComponent {
@@ -15,6 +15,7 @@ class SignupPage extends PureComponent {
 
 	render() {
 		const { error, success } = this.props
+
 		if (success) return (
 			<Redirect to="/login" />
 		)

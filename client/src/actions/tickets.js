@@ -10,7 +10,6 @@ export const EDIT_TICKET = 'EDIT_TICKET'
 export const DELETE_TICKET = 'DELETE_TICKET'
 
 export const getSelectedTickets = (eventId) => (dispatch) => {
-
   request
     .get(`${baseUrl}/events/${eventId}/tickets/`)
     .then(response => dispatch({
@@ -21,7 +20,6 @@ export const getSelectedTickets = (eventId) => (dispatch) => {
 }
 
 export const getTicket = (eventId, ticketId) => (dispatch) => {
-
   request
     .get(`${baseUrl}/events/${eventId}/tickets/${ticketId}`)
     .then(response => dispatch({

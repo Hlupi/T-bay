@@ -3,7 +3,6 @@ import * as Yup from 'yup'
 
 import Form from '../../fragments/Forms'
 
-
 const LoginSchema = Yup.object({
 	email: Yup.string()
 		.email('This looks like an invalid email')
@@ -19,7 +18,6 @@ const initialValues = {
 
 
 export default class LoginForm extends PureComponent {
-	state = {}
 
 	handleSubmit = (data) => {
 		this.props.onSubmit(data)
@@ -40,6 +38,7 @@ export default class LoginForm extends PureComponent {
 				autoComplete: "current-password"
 			},
 		]
+
 		return (
 			<Form
 				initialValues={initialValues}

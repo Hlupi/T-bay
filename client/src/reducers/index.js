@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import users from './users'
+
+import signup from './signup'
 import login from './login'
 import currentUser from './currentUser'
-import signup from './signup'
 import events from './events'
 import event from './event'
 import tickets from './tickets'
@@ -11,10 +11,9 @@ import comments from './comments'
 import isAdmin from './isAdmin'
 
 export default combineReducers({
-  users,
+  signup,
   login,
   currentUser,
-  signup,
   events,
   event,
   tickets,

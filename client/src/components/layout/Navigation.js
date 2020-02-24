@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 
 import Wrapper from '../../fragments/Wrapper'
 
-const Container = styled.nav`
+const Bar = styled.nav`
   padding-top: 10px;
   padding-bottom: 10px;
   background: #3C13D3;
@@ -23,37 +23,43 @@ const Container = styled.nav`
 const Nav = styled(Wrapper)`
   display: flex;
   justify-content: space-between;
+
+  & > ul {
+    & > li {
+      display: inline-block;
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
+  }
 `
 
 const Button = styled.button`
   background: none;
   color: #fff;
   font-size: 16px;
-  &:not(:last-child) {
-    margin-right: 10px;
-  }
 `
 
 
-const TopBar = (props) => {
+const Navigation = (props) => {
   const { location, history, user } = props
 
   const renderUserOptions = user ?
-                            <Button onClick={() => history.push('/logout')}>Log out</Button> :
+                            <li><Button onClick={() => history.push('/logout')}>Log out</Button></li> :
                             location.pathname.indexOf('login') > 0 ?
-                            <Button color="inherit" onClick={() => history.push('/signup')}>Sign up</Button> :
-                            <Button onClick={() => history.push('/login')}>Login</Button>
+                            <li><Button color="inherit" onClick={() => history.push('/signup')}>Sign up</Button></li> :
+                            <li><Button onClick={() => history.push('/login')}>Login</Button></li>
 
   return (
-    <Container withHeader={/events$/.test(location.pathname)}>
+    <Bar withHeader={/events$/.test(location.pathname)}>
       <Nav>
         <p>Tbay</p>
         <ul>
-          { !/events$/.test(location.pathname) && <Button color="inherit" onClick={() => history.push('/events')}>All Events</Button> }
+          { !/events$/.test(location.pathname) && <li><Button color="inherit" onClick={() => history.push('/events')}>All Events</Button></li> }
           { renderUserOptions }
         </ul>
       </Nav>
-    </Container>
+    </Bar>
   )
 }
 
@@ -61,6 +67,4 @@ const mapStateToProps = state => ({
   user: state.currentUser
 })
 
-export default withRouter(
-  connect(mapStateToProps)(TopBar)
-)
+export default withRouter(connect(mapStateToProps)(Navigation))
