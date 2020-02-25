@@ -3,8 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { signup } from '../../actions/users'
-import { Container } from '../../fragments/Layout'
-import Wrapper from '../../fragments/Wrapper'
+import { Container, Wrapper } from '../../fragments/Layout'
 import SignupForm from './SignupForm'
 
 
@@ -21,7 +20,7 @@ class SignupPage extends PureComponent {
 		)
 
 		return (
-			<Container>
+			<Container styledPage>
 				<Wrapper>
 					<SignupForm onSubmit={this.handleSubmit} formError={error} />
 				</Wrapper>

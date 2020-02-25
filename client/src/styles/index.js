@@ -35,8 +35,15 @@ export default createGlobalStyle`
   }
 
   button {
-    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Quicksand', sans-serif;
+    opacity: 0.8;
+    transition: opacity .25s linear;
     border: none;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
   }
 
   p,

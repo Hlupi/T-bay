@@ -1,14 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-export const Container = styled.section`
-  position: relative;
-`
-
-export const Toolbar = styled.div`
-  padding: 10px 0;
-`
-
 export const Cards = styled.ul`
   display: flex;
   flex-wrap: wrap;
@@ -92,19 +84,4 @@ export const Content = styled.div`
   @media(min-width: 640px) {
     width: 100%;
   }
-`
-
-export const Title = styled.h3`
-  font-size: 18px;
-  margin-bottom: 5px;
-`
-
-export const Description = styled.p`
-  font-size: 16px;
-  margin-bottom: 10px;
-`
-
-export const Date = styled.p`
-  font-size: 14px;
-  color: #514e57;
 `

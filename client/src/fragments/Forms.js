@@ -2,8 +2,8 @@ import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { Formik } from 'formik'
 
-import Wrapper from './Wrapper'
-import Button from './Button'
+import { Wrapper } from './Layout'
+import CrossButton from './Button'
 
 const Container = styled.article`
   position: absolute;
@@ -64,20 +64,16 @@ export const Input = styled.input`
   ${({ auto }) => auto && 'margin-right: 20px'};
   padding: 0px 10px;
   width: ${({ auto }) => !auto && '69%'};
-  font-size: 16px;
-  font-family: 'Quicksand', sans-serif;
   border: 1px solid #3c13d3;
   border-radius: 20px;
 `
 
-export const Submit = styled.button`
+export const Button = styled.button`
   margin-top: 20px;
   padding: 0 15px;
   border-radius: 10px;
   background: rgba(60, 19, 211, 0.1);
   color: #3c13d3;
-  font-size: 16px;
-  font-family: 'Quicksand', sans-serif;
   ${({ center }) => center && css`
     position: relative;
     left: 50%;
@@ -119,50 +115,39 @@ export const Error = styled.p`
 `
 
 const Form = (props) => {
-  const { onClick, handleSubmit, title, fields, onChange, button, open, overlaying, initialValues, validationSchema, formError } = props
+  const { onClick, handleSubmit, title, fields, button, open, overlaying, initialValues, validationSchema, formError } = props
 
   const FormEssentials = (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => {
       handleSubmit(values)
      }}>
       {props => {
-        const {
-       values,
-       touched,
-       errors,
-       dirty,
-       isSubmitting,
-       handleChange,
-       handleBlur,
-       handleSubmit,
-       handleReset, 
-       isValidating
-    } = props
-    const renderFields = fields.length && fields.map((field, i) => {
-      const fieldError = isSubmitting && formError && !!~formError.toLowerCase().indexOf(field.name)
-      const hasErrors = errors[field.name]
-      const wasTouched = touched[field.name]
-      return (
-        <Element key={i}>
-          <Label htmlFor={field.name}>{field.label}</Label>
-          <Input name={field.name} id={field.name} value={values[field.name]}  onChange={handleChange} type={field.type} autoComplete={field.autoComplete && field.autoComplete} onBlur={handleBlur} />
-          {hasErrors ? wasTouched && 
-          <Error visible={hasErrors && wasTouched}>{hasErrors}</Error> 
-          : fieldError && 
-          <Error visible={isSubmitting && fieldError}>{formError}</Error>
-          }
-        </Element>
-      )
-    })
+        const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props
+        const renderFields = fields.length && fields.map((field, i) => {
+        const fieldError = isSubmitting && formError && !!~formError.toLowerCase().indexOf(field.name)
+        const hasErrors = errors[field.name]
+        const wasTouched = touched[field.name]
+        return (
+          <Element key={i}>
+            <Label htmlFor={field.name}>{field.label}</Label>
+            <Input name={field.name} id={field.name} value={values[field.name]}  onChange={handleChange} type={field.type} autoComplete={field.autoComplete && field.autoComplete} onBlur={handleBlur} />
+            {hasErrors ? wasTouched && 
+            <Error visible={hasErrors && wasTouched}>{hasErrors}</Error> 
+            : fieldError && 
+            <Error visible={isSubmitting && fieldError}>{formError}</Error>
+            }
+          </Element>
+        )
+      })
 
       return (
       <SForm as='form' onSubmit={handleSubmit}>
         <Title>{title}</Title>
         {renderFields}
-        <Submit type="submit" center>{button}</Submit>
+        <Button type="submit" center>{button}</Button>
       </SForm>
       )}
-}
+    }
     </Formik>
   )
 
@@ -170,7 +155,7 @@ const Form = (props) => {
     <Container>
       <Backdrop onClick={onClick} />
       <SWrapper>
-      <Button onClick={onClick} open={open} />
+      <CrossButton onClick={onClick} open={open} overlaying />
       {FormEssentials}
       </SWrapper>
     </Container>
