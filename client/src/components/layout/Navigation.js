@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import styled, { css } from 'styled-components'
 
-import Wrapper from '../../fragments/Wrapper'
+import { Wrapper } from '../../fragments/Layout'
 
 const Bar = styled.nav`
   padding-top: 10px;
@@ -37,7 +37,6 @@ const Nav = styled(Wrapper)`
 const Button = styled.button`
   background: none;
   color: #fff;
-  font-size: 16px;
 `
 
 

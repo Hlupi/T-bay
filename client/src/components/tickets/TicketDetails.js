@@ -2,14 +2,15 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { getEvent } from '../../actions/events'
-import { getSelectedTickets, getTicket, editTicket, deleteTicket } from '../../actions/tickets';
-import { getSelectedComments, createComment, deleteComment } from '../../actions/comments';
+import { getTicket, deleteTicket } from '../../actions/tickets';
 import { userId } from '../../jwt'
-import { Header } from '../../fragments/Header'
-import { Container, StyledWrapper, Date, Title, Seller, Subtitle, Card, Thumb, Description, Price, Toolbar, Risk, Comment, Author, Content, Button } from '../../fragments/Ticket'
-import AddComment from './AddComment'
-import AddTicket from './AddTicket'
-import PlusButton from '../../fragments/Button'
+import { Header, Container, Wrapper, Toolbar, Button } from '../../fragments/Layout'
+import { H1, H2, Date, Description } from '../../fragments/Content'
+import { Seller, Card, Thumb, Price, Risk } from '../../fragments/Ticket'
+import CrossButton from '../../fragments/Button'
+import TicketForm from './TicketForm'
+import Comments from '../comments/Comments'
+import AddComment from '../comments/AddComment'
 
 
 class TicketDetails extends PureComponent {
@@ -17,26 +18,15 @@ class TicketDetails extends PureComponent {
     edit: false
   }
 
-  toggleEdit = () => {
-    this.setState({
-      edit: !this.state.edit
-    })
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     this.props.getEvent(this.props.match.params.ed)
-    // this.props.getSelectedTickets(this.props.match.params.ed)
     this.props.getTicket(this.props.match.params.ed, this.props.match.params.id)
-    this.props.getSelectedComments(this.props.match.params.id)
   }
-
-  editTicket = (ticket) => {
-    this.props.editTicket(this.props.match.params.id, ticket)
-  }
-
-  addComment = (comment) => {
-    comment.ticket = this.props.ticket
-    this.props.createComment(comment)
+  
+  toggleEdit = () => {
+    this.setState((prevState, props) => ({
+      edit: !prevState.edit
+    }))
   }
 
   deleteTicket = (id) => {
@@ -45,12 +35,9 @@ class TicketDetails extends PureComponent {
     this.props.history.push(`/events/${ed}`)
   }
 
-  deleteComment = (id) => {
-    this.props.deleteComment(id)
-  }
-
   render() {
-    const { event, ticket, comments, isAuthor, isAdmin } = this.props
+    const { event, ticket, user, isAuthor, isAdmin } = this.props
+    const { edit } = this.state
 
     const allowEdit = isAuthor || isAdmin
 
@@ -59,45 +46,32 @@ class TicketDetails extends PureComponent {
     return (
       <React.Fragment>
         <Header style={{ backgroundImage: `url('${event.picture}')` }} />
-        <Container>
-          <StyledWrapper>
+        <Container relative>
+          <Wrapper ticket>
             <Date>{event.starts} - {event.ends}</Date>
             <Toolbar flex>
-
-            <Title>Ticket for {event.name}</Title>
-            {isAdmin &&  <PlusButton open red onClick={() => this.deleteTicket(ticket.id)} />}
+              <H1>Ticket for {event.name}</H1>
+              {isAdmin &&  <CrossButton open red onClick={() => this.deleteTicket(ticket.id)} />}
             </Toolbar>
             <Seller>Sold by {ticket.user.firstName}</Seller>
             <Toolbar flex>
-              <Subtitle addSpacing>Details</Subtitle>
-              {this.props.currentUser && allowEdit && !this.state.edit &&
-                <div>
-                  <Button onClick={this.toggleEdit}>edit</Button>
-                </div>}
+              <H2 ticket addSpacing>Details</H2>
+              {allowEdit && <Button onClick={this.toggleEdit}>edit</Button> }
             </Toolbar>
             <Card>
               <Thumb style={{ backgroundImage: `url('${ticket.picture}')` }} />
-              <Description>{ticket.description}</Description>
+              <Description ticket>{ticket.description}</Description>
               <Price>${ticket.price}</Price>
             </Card>
             <Toolbar addSpacing flex>
-              <Subtitle>Estimated risk:</Subtitle>
+              <H2 ticket>Estimated risk:</H2>
               <Risk>{ticket.risk}%</Risk>
             </Toolbar>
-            <Subtitle addSpacing>Comments</Subtitle>
-
-            {this.props.currentUser && this.state.edit &&
-              <AddTicket initialValues={ticket} onSubmit={this.editTicket} close={this.toggleEdit} open={this.state.edit} title="Edit this ticket" />}
-              {!comments.length && <p>No comments yet</p> }
-            {comments.map(comment => (
-              <Comment key={comment.id}>
-                <Author>{comment.user.firstName}</Author>
-                <Content admin={isAdmin}>{comment.text}</Content>
-                {isAdmin &&  <PlusButton open red onClick={() => this.deleteComment(comment.id)} />}
-              </Comment>
-            ))}
-            {this.props.currentUser && <AddComment onSubmit={this.addComment} />}
-          </StyledWrapper>
+            <H2 ticket addSpacing>Comments</H2>
+            <Comments />
+            {user && <AddComment />}
+            {allowEdit && edit && <TicketForm editing close={this.toggleEdit} open={edit} />}
+          </Wrapper>
         </Container>
       </React.Fragment>
     )
@@ -106,14 +80,12 @@ class TicketDetails extends PureComponent {
 
 const mapStateToProps = function (state) {
   return {
-    ticket: state.ticket,
-    comments: state.comments,
-    currentUser: state.currentUser,
     event: state.event,
-    tickets: state.tickets,
-    isAuthor: state.currentUser && state.ticket && userId(state.currentUser.jwt) == state.ticket.user.id,
+    ticket: state.ticket,
+    user: state.currentUser,
+    isAuthor: state.currentUser && state.ticket && userId(state.currentUser.jwt) === state.ticket.user.id,
     isAdmin: state.isAdmin
   }
 }
 
-export default connect(mapStateToProps, { getSelectedTickets, getTicket, getEvent, getSelectedComments, createComment, editTicket, deleteTicket, deleteComment })(TicketDetails)
+export default connect(mapStateToProps, { getTicket, getEvent, deleteTicket })(TicketDetails)

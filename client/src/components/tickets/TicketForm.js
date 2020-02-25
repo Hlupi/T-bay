@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import * as Yup from 'yup'
 
+import { createTicket, editTicket } from '../../actions/tickets'
 import Form from '../../fragments/Forms'
-
 
 const TicketSchema = Yup.object({
   picture: Yup.string()
@@ -21,15 +22,22 @@ const initialValues = {
 }
 
 
-class AddTicket extends PureComponent {
-  state = {}
+class TicketForm extends PureComponent {
 
-  handleSubmit = (data) => {
-    this.props.onSubmit(data)
+  editTicket = (ticket) => {
+    this.props.editTicket(this.props.ticket.id, ticket)
+    this.props.close()
+  }
+
+  createTicket = (ticket) => {
+    ticket.event = this.props.event
+    this.props.createTicket(ticket)
     this.props.close()
   }
 
   render() {
+    const { editing, ticket, close, open } = this.props
+
     const fields = [
       {
         label: 'Picture (url):',
@@ -50,13 +58,13 @@ class AddTicket extends PureComponent {
 
     return (
       <Form
-        initialValues={this.props.initialValues ? this.props.initialValues :initialValues}
+        initialValues={editing ? ticket :initialValues}
         validationSchema={TicketSchema}
-        onClick={this.props.close}
-        handleSubmit={this.handleSubmit}
+        onClick={close}
+        handleSubmit={editing ? this.editTicket : this.createTicket}
         fields={fields}
-        open={this.props.open}
-        title={this.props.title ? this.props.title : "Add a ticket"}
+        open={open}
+        title={editing ? "Edit this ticket" : "Add a ticket"}
         button="Post"
         overlaying
       />
@@ -64,4 +72,9 @@ class AddTicket extends PureComponent {
   }
 }
 
-export default AddTicket
+const mapStateToProps = state => ({
+  ticket: state.ticket,
+  event: state.event
+})
+
+export default connect(mapStateToProps, { createTicket, editTicket } )(TicketForm) 

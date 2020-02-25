@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import * as Yup from 'yup'
 
+import { createEvent, updateEvent } from '../../actions/events'
 import Form from '../../fragments/Forms'
 
 const EventSchema = Yup.object({
@@ -28,12 +30,19 @@ const initialValues = {
 
 
 class EventForm extends PureComponent {
-  handleSubmit = (event) => {
-    this.props.onSubmit(event)
+
+  addEvent = (event) => {
+    this.props.createEvent(event)
+    this.props.close()
+  }
+
+  editEvent = (event) => {
+    this.props.updateEvent(event.id, event)
     this.props.close()
   }
 
   render() {
+    const { editing, close, open } = this.props
     const fields = [
       {
         label: 'Name:',
@@ -64,13 +73,13 @@ class EventForm extends PureComponent {
 
     return (
       <Form
-        initialValues={this.props.initialValues ? this.props.initialValues : initialValues}
+        initialValues={editing ? this.props.initialValues : initialValues}
         validationSchema={EventSchema}
-        onClick={this.props.close}
-        handleSubmit={this.handleSubmit}
+        onClick={close}
+        handleSubmit={editing? this.editEvent : this.addEvent}
         fields={fields}
-        open={this.props.open}
-        title={this.props.title ? this.props.title : "Add an event"}
+        open={open}
+        title={editing ? "Edit this event": "Add an event"}
         button="Post"
         overlaying
       />
@@ -78,4 +87,4 @@ class EventForm extends PureComponent {
   }
 }
 
-export default EventForm
+export default connect(null, { createEvent, updateEvent })(EventForm)
