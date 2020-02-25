@@ -64,6 +64,8 @@ export const Input = styled.input`
   ${({ auto }) => auto && 'margin-right: 20px'};
   padding: 0px 10px;
   width: ${({ auto }) => !auto && '69%'};
+  font-size: 16px;	
+  font-family: 'Quicksand', sans-serif;
   border: 1px solid #3c13d3;
   border-radius: 20px;
 `
