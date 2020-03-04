@@ -73,7 +73,10 @@ export const Wrapper = styled.div`
 export const Toolbar = styled.div`
 	${({ events }) => events && 'padding: 10px 0'};
 	${({ addSpacing }) => addSpacing && 'margin-bottom: 40px'};
-  ${({ flex }) => flex && 'display: flex'};
+	${({ flex }) => flex && css`
+		display: flex;
+		align-items: center;
+	`};
 	${({ event }) => event && css`
 		margin-bottom: 10px;
 		display: flex;
@@ -86,7 +89,7 @@ export const AdminControls = styled.div`
 	display: flex;
   align-items: center;
   & > button {
-    &:first-of-type {
+    &:not(:last-of-type) {
       margin-right: 20px;
     }
   }

@@ -63,11 +63,7 @@ class EventDetails extends PureComponent {
                 </Toolbar>
                 <H2 addSpacing>Details</H2>
                 <Description event>{event.description}</Description>
-                <Toolbar event>
-                  <H2>Tickets</H2>
-                  {user && <CrossButton onClick={this.toggleAdding} />}
-                </Toolbar>
-                <Tickets />
+                <Tickets onClick={this.toggleAdding} />
               </Wrapper>
 
               {user && adding && <TicketForm close={this.toggleAdding} open={adding} />}

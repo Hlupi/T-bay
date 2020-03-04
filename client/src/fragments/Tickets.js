@@ -36,3 +36,21 @@ export const Price = styled.p`
    order: 3;
   }
 `
+
+export const Select = styled.select`
+  ${({ notAlone }) => notAlone && 'margin-right: 20px'};
+  padding: 2px 10px;
+  font-size: 16px;
+  font-family: 'Quicksand', sans-serif;
+  background: rgba(60,19,211,0.1);
+  color: #3c13d3;
+  border-radius: 30px;
+  border: 1px solid transparent;
+  transition: border-color .25s linear;
+  border: none;
+  outline: none;
+  appearance: none;
+  &:focus {
+    border-color: #3c13d3;
+  }
+`

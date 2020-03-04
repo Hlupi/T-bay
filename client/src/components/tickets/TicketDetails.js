@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 
 import { getEvent } from '../../actions/events'
-import { getTicket, deleteTicket } from '../../actions/tickets';
+import { getTicket, deleteTicket } from '../../actions/tickets'
 import { userId } from '../../jwt'
 import { Header, Container, Wrapper, Toolbar, Button } from '../../fragments/Layout'
 import { H1, H2, Date, Description } from '../../fragments/Content'
