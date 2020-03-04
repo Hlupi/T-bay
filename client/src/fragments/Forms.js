@@ -117,7 +117,7 @@ export const Error = styled.p`
 `
 
 const Form = (props) => {
-  const { onClick, handleSubmit, title, fields, button, open, overlaying, initialValues, validationSchema, formError } = props
+  const { onClick, handleSubmit, title, fields, button, open, overlaying, initialValues, validationSchema, formError, ariaLabel } = props
 
   const FormEssentials = (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => {
@@ -157,7 +157,7 @@ const Form = (props) => {
     <Container>
       <Backdrop onClick={onClick} />
       <SWrapper>
-      <CrossButton onClick={onClick} open={open} overlaying />
+      <CrossButton onClick={onClick} open={open} ariaLabel={ariaLabel} overlaying />
       {FormEssentials}
       </SWrapper>
     </Container>

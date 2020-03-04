@@ -35,6 +35,7 @@ export default createGlobalStyle`
   }
 
   button {
+    padding: 0;
     font-size: 16px;
     font-family: 'Quicksand', sans-serif;
     opacity: 0.8;

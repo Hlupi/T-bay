@@ -82,6 +82,7 @@ class EventForm extends PureComponent {
         title={editing ? "Edit this event": "Add an event"}
         button="Post"
         overlaying
+        ariaLabel="Close the form"
       />
     )
   }
