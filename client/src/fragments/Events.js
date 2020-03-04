@@ -85,3 +85,46 @@ export const Content = styled.div`
     width: 100%;
   }
 `
+
+export const Search = styled.input`
+  width: ${({ withAdmin }) => withAdmin ? 'calc(100% - 50px - 20px)' : '100%'};
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  font-size: 16px;
+  font-family: 'Quicksand', sans-serif;
+  background: rgba(60,19,211,0.1);
+  color: #3c13d3;
+  outline: none;
+  transition: border-color .25s linear;
+  &::placeholder {
+    color: #3c13d3;
+  }
+  &:focus {
+    border: 1px solid #3c13d3;
+  }
+  @media(min-width: 640px) {
+    width: calc(66.6666% - 20px);
+  }
+  @media(min-width: 1024px) {
+    width: calc(33.3333% - 20px);
+  }
+`
+
+export const Pagination = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  width: fit-content;
+`
+
+export const Pager = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: ${({ disabled }) => disabled ? 'rgba(181, 174, 212,0.1)' : 'rgba(60,19,211,0.1)'};
+  transition: background .25s ease-in;
+  &:first-of-type {
+    margin-right: 20px;
+  }
+`
