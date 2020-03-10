@@ -7,7 +7,7 @@ import { Comment, Content } from '../../fragments/Comments'
 import CrossButton from '../../fragments/Button'
 
 class Comments extends PureComponent {
-  componentDidMount() {
+  componentWillMount() {
     this.props.getSelectedComments(this.props.ticket)
   }
 
