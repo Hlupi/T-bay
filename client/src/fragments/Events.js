@@ -36,12 +36,12 @@ export const Card = styled.li`
   @media(min-width: 640px) {
     margin-bottom: 40px;
     flex-wrap: wrap;    
+    flex-basis: calc(33.3333% - 20px);
     &:not(:nth-child(3n)) {
       margin-right: 20px;
-      flex-basis: calc(33.3333% - 20px);
     }
-    &:nth-child(3n) {
-      flex-basis: 33.3333%;
+    &:not(:nth-child(3n+1)) {
+      margin-left: auto;
     }
   }
 `
