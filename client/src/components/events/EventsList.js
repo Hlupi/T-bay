@@ -48,6 +48,7 @@ class EventsList extends PureComponent {
         start: this.state.start + 9,
         end: this.state.end + 9
       })
+      document.querySelector('#page-top').scrollIntoView()
     }
   }
 
@@ -72,7 +73,7 @@ class EventsList extends PureComponent {
       <React.Fragment>
         <Header main style={{ backgroundImage: "url('/img/shapes.svg')" }} />
         <Container relative as="section">
-          <Wrapper>
+          <Wrapper id="page-top">
             <Toolbar events flex>
               <Search type="text" value={searchValue}  onChange={this.handleSearch} aria-label="Search events" placeholder="Search events" withAdmin={isAdmin} />
               { isAdmin && <CrossButton onClick={this.toggleAdding} ariaLabel="Add event" /> }
