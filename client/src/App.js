@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux'
 
+import { getAllEvents } from './actions/events'
+import { getAdmin } from './actions/users'
 import GlobalStyles from './styles'
 import LoginPage from './components/login/LoginPage'
 import LogoutPage from './components/logout/LogoutPage'
@@ -10,10 +12,10 @@ import Navigation from './components/layout/Navigation'
 import EventsList from './components/events/EventsList'
 import EventDetails from './components/events/EventDetails'
 import TicketDetails from './components/tickets/TicketDetails'
-import { getAdmin } from './actions/users'
 
 class App extends Component {
   componentDidMount() {
+    this.props.getAllEvents()
     this.props.getAdmin(this.props.currentUser)
   }
 
@@ -50,4 +52,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { getAdmin })(App);
+export default connect(mapStateToProps, { getAllEvents, getAdmin })(App);

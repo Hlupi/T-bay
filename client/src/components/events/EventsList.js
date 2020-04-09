@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import { getAllEvents } from '../../actions/events'
 import { Header, Container, Wrapper, Toolbar } from '../../fragments/Layout'
 import { Search, Pagination, Pager } from '../../fragments/Events'
 import { Arrow } from '../../fragments/Arrows'
@@ -19,10 +18,6 @@ class EventsList extends PureComponent {
     searchValue: '',
     start: 0,
     end: 9
-  }
-
-  componentDidMount() {
-    this.props.getAllEvents()
   }
 
   toggleEditing = (event) => {
@@ -103,4 +98,4 @@ const mapStateToProps = function (state) {
   }
 }
 
-export default connect(mapStateToProps, { getAllEvents })(EventsList)
+export default connect(mapStateToProps)(EventsList)
