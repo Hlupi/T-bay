@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { signup } from '../../actions/users'
-import { Container, Wrapper } from '../../fragments/Layout'
+import { Container } from '../../fragments/Layout'
 import SignupForm from './SignupForm'
 
 
