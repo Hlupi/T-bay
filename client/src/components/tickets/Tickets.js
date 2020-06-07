@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 
 import { getSelectedTickets } from '../../actions/tickets'
 import { Toolbar, AdminControls } from '../../fragments/Layout'
@@ -13,8 +14,8 @@ class Tickets extends PureComponent {
     value: ''
   }
 
-  componentDidMount() {
-    this.props.getSelectedTickets(this.props.event.id)
+  componentWillMount() {
+    this.props.getSelectedTickets(this.props.match.params.id)
   }
 
   handleChange = (e) => {
@@ -51,7 +52,7 @@ class Tickets extends PureComponent {
             <option value="user">Seller</option>
             <option value="price">Price</option>
           </Select> }
-          {user && <CrossButton onClick={this.toggleAdding} />}
+          {user && <CrossButton onClick={this.props.onClick} />}
           </AdminControls>
         </Toolbar>
         {hasTickets ?
@@ -68,4 +69,4 @@ const mapStateToProps = state => ({
   user: state.currentUser
 })
 
-export default connect(mapStateToProps, { getSelectedTickets })(Tickets)
+export default connect(mapStateToProps, { getSelectedTickets })(withRouter(Tickets))

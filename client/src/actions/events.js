@@ -13,15 +13,27 @@ export const getAllEvents = () => (dispatch, getState) => {
   if (getState().events.length) return
 
   request
-    .get(`${baseUrl}/events`)
-    .then(response => dispatch({
+  .get(`${baseUrl}/events`)
+    .then(response => {
+      return response.body.events.map(event => {
+        const days = (ds)  => 1000 * 60 * 60 * 24 * Math.floor(Math.random() * Math.floor(ds))
+        const newDate = (date, baseDate, ds) => new Date(date) < baseDate ? new Date(+baseDate + days(ds)).toISOString().split('T')[0] : date
+        const newStarts = newDate(event.starts, new Date(), 15)
+        const newEnds = newDate(event.ends, new Date(newStarts), 4)
+        return {...event, starts: newStarts, ends: newEnds}
+      }).sort((ev1, ev2) =>  new Date(ev1.starts) - new Date(ev2.starts))
+    })
+    .then(events => dispatch({
       type: GOT_ALL_EVENTS,
-      payload: response.body.events
+      payload: events
     }))
     .catch(err => alert(err))
 }
 
-export const getEvent = (eventId) => (dispatch) => {
+export const getEvent = (eventId) => (dispatch, getState) => {
+  const event = getState().event
+  if(event && event.id === eventId) return
+
   request
     .get(`${baseUrl}/events/${eventId}`)
     .then(response => dispatch({

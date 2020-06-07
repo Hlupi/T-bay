@@ -15,7 +15,7 @@ export const H3 = styled.h3`
   margin-bottom: 5px;
 `
 
-export const Date = styled.p`
+export const When = styled.p`
   ${({ events }) => !events && 'margin-bottom: 10px'};
   font-size: 14px;
   color: #514e57;

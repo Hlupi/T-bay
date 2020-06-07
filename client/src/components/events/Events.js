@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
 import { deleteEvent } from '../../actions/events'
+import { dates } from './dates'
 import { Cards, Card, StyledLink, ThumbContainer, Thumb, Content } from '../../fragments/Events'
 import { AdminControls, Button } from '../../fragments/Layout'
-import { H3, Date, Description } from '../../fragments/Content'
+import { H3, When, Description } from '../../fragments/Content'
 import CrossButton from '../../fragments/Button'
 
 
@@ -28,11 +29,13 @@ class Events extends PureComponent {
   render() {
     const { control } = this.state
     const { events, isAdmin, onEdit } = this.props
- 
-    const renderEvents = events.length > 0 ? events.map((event, i) => {
+
+    const renderEvents = events.length > 0 ?  events.map((event, i) => {
       const displayControls = control && control === event.id
+      const displayDates = dates(event.starts, event.ends)
       return (
-        <Card key={i} onMouseEnter={() => this.showControls(event.id)} onMouseLeave={this.hideControls}>
+        <Card key={i} onMouseEnter={isAdmin && (() => this.showControls(event.id))} onMouseLeave={isAdmin 
+        && this.hideControls}>
           <StyledLink to={`/events/${event.id}`}>
             <ThumbContainer>
               <Thumb style={{ backgroundImage: `url('${event.picture}')` }} />
@@ -40,7 +43,7 @@ class Events extends PureComponent {
             <Content>
               <H3>{event.name}</H3>
               <Description events>{event.description}</Description>
-              <Date events>{event.starts} - {event.ends}</Date>
+              <When events>{displayDates}</When>
             </Content>
           </StyledLink>
           {isAdmin && displayControls &&

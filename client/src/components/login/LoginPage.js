@@ -21,9 +21,7 @@ class LoginPage extends PureComponent {
 
 		return (
 			<Container styledPage>
-				<Wrapper>
-					<LoginForm onSubmit={this.handleSubmit} formError={error} />
-				</Wrapper>
+				<LoginForm onSubmit={this.handleSubmit} formError={error} />
 			</Container>
 		)
 	}

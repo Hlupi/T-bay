@@ -114,7 +114,7 @@ export const Search = styled.input`
 export const Pagination = styled.div`
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   width: fit-content;
 `
 

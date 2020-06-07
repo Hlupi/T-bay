@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { getEvent } from '../../actions/events'
 import { getTicket, deleteTicket } from '../../actions/tickets'
 import { userId } from '../../jwt'
+import { dates } from '../events/dates'
 import { Header, Container, Wrapper, Toolbar, Button } from '../../fragments/Layout'
-import { H1, H2, Date, Description } from '../../fragments/Content'
+import { H1, H2, When, Description } from '../../fragments/Content'
 import { Seller, Card, Thumb, Price, Risk } from '../../fragments/Ticket'
 import CrossButton from '../../fragments/Button'
 import TicketForm from './TicketForm'
@@ -24,7 +25,7 @@ class TicketDetails extends PureComponent {
   }
   
   toggleEdit = () => {
-    this.setState((prevState, props) => ({
+    this.setState((prevState) => ({
       edit: !prevState.edit
     }))
   }
@@ -36,7 +37,7 @@ class TicketDetails extends PureComponent {
   }
 
   render() {
-    const { event, ticket, user, isAuthor, isAdmin } = this.props
+    const { event, ticket, user, isAuthor, isAdmin, newDates } = this.props
     const { edit } = this.state
 
     const allowEdit = isAuthor || isAdmin
@@ -48,7 +49,7 @@ class TicketDetails extends PureComponent {
         <Header style={{ backgroundImage: `url('${event.picture}')` }} />
         <Container relative>
           <Wrapper ticket>
-            <Date>{event.starts} - {event.ends}</Date>
+            <When>{newDates && dates(newDates.starts, newDates.ends)}</When>
             <Toolbar flex>
               <H1>Ticket for {event.name}</H1>
               {isAdmin &&  <CrossButton open red onClick={() => this.deleteTicket(ticket.id)} />}
@@ -84,7 +85,8 @@ const mapStateToProps = function (state) {
     ticket: state.ticket,
     user: state.currentUser,
     isAuthor: state.currentUser && state.ticket && userId(state.currentUser.jwt) === state.ticket.user.id,
-    isAdmin: state.isAdmin
+    isAdmin: state.isAdmin,
+    newDates: state.event && state.events.filter(item => item.id === state.event.id)[0]
   }
 }
 

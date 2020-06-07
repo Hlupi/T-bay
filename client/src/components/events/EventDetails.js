@@ -2,8 +2,9 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
 import { getEvent, deleteEvent } from '../../actions/events'
+import { dates } from './dates'
 import { Header, Container, Wrapper, Toolbar, AdminControls, Button } from '../../fragments/Layout'
-import { H1, H2, Date, Description } from '../../fragments/Content'
+import { H1, H2, When, Description } from '../../fragments/Content'
 import CrossButton from '../../fragments/Button'
 import EventForm from './EventForm'
 import TicketForm from '../tickets/TicketForm'
@@ -16,8 +17,9 @@ class EventDetails extends PureComponent {
     editing: false
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getEvent(this.props.match.params.id)
+
   }
 
   toggleEditing = () => {
@@ -38,7 +40,7 @@ class EventDetails extends PureComponent {
   }
 
   render() {
-    const { event, user, isAdmin } = this.props
+    const { event, user, isAdmin, newDates } = this.props
     const { adding, editing } = this.state
 
     if (!event) return null
@@ -52,7 +54,7 @@ class EventDetails extends PureComponent {
             <Header style={{ backgroundImage: `url('${event.picture}')` }} />
             <Container relative spacingTop>
               <Wrapper event>
-                <Date>{event.starts} - {event.ends}</Date>
+                <When>{newDates && dates(newDates.starts, newDates.ends)}</When>
                 <Toolbar event>
                   <H1>{event.name}</H1>
                   {isAdmin &&
@@ -81,7 +83,8 @@ const mapStateToProps = function (state) {
   return {
     event: state.event,
     user: state.currentUser,
-    isAdmin: state.isAdmin
+    isAdmin: state.isAdmin,
+    newDates: state.event && state.events.filter(item => item.id === state.event.id)[0]
   }
 }
 

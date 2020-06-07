@@ -22,11 +22,11 @@ export default class Event extends BaseEntity {
   @Column('text')
   picture: string
 
-  @Column('text')
-  starts: string
+  @Column({type: 'date', nullable: true})
+  starts: Date
 
-  @Column('text')
-  ends: string
+  @Column({type: 'date', nullable: true})
+  ends: Date
 
 
   @OneToMany(_ => Ticket, ticket => ticket.event)

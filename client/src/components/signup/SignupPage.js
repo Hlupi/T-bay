@@ -21,9 +21,7 @@ class SignupPage extends PureComponent {
 
 		return (
 			<Container styledPage>
-				<Wrapper>
-					<SignupForm onSubmit={this.handleSubmit} formError={error} />
-				</Wrapper>
+				<SignupForm onSubmit={this.handleSubmit} formError={error} />
 			</Container>
 		)
 	}

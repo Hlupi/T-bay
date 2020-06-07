@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 
 import { getSelectedComments, deleteComment } from '../../actions/comments'
 import { Description, Author } from '../../fragments/Content'
@@ -7,8 +8,8 @@ import { Comment, Content } from '../../fragments/Comments'
 import CrossButton from '../../fragments/Button'
 
 class Comments extends PureComponent {
-  componentWillMount() {
-    this.props.getSelectedComments(this.props.ticket)
+  componentDidMount() {
+    this.props.getSelectedComments(this.props.match.params.id)
   }
 
   onDelete = (id) => {
@@ -44,4 +45,4 @@ const mapStateToProps = state => ({
   isAdmin: state.isAdmin
 })
 
-export default connect(mapStateToProps, { getSelectedComments, deleteComment })(Comments)
+export default connect(mapStateToProps, { getSelectedComments, deleteComment })(withRouter(Comments))

@@ -62,12 +62,14 @@ class EventForm extends PureComponent {
       {
         label: 'Start Date:',
         name: 'starts',
-        type: 'date'
+        type: 'date',
+        min: new Date().toISOString().split('T')[0]
       },
       {
         label: 'End Date:',
         name: 'ends',
-        type: 'date'
+        type: 'date',
+        min: new Date().toISOString().split('T')[0]
       }
     ]
 

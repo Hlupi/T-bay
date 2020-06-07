@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { Formik } from 'formik'
 
@@ -20,6 +20,7 @@ const Backdrop = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
+  min-height: 100vh; /*FIXXX*/
   z-index: 0;
   cursor: pointer;
 `
@@ -28,6 +29,12 @@ const SWrapper = styled(Wrapper)`
   margin-top: 10px;
   margin-bottom: 20px;
   max-width: 700px;
+  ${({ center }) => center && css`
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+  `};
 `
 
 export const SForm = styled(Wrapper)`
@@ -116,56 +123,101 @@ export const Error = styled.p`
   `};
 `
 
-const Form = (props) => {
-  const { onClick, handleSubmit, title, fields, button, open, overlaying, initialValues, validationSchema, formError, ariaLabel } = props
-
-  const FormEssentials = (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => {
-      handleSubmit(values)
-     }}>
-      {props => {
-        const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props
-        const renderFields = fields.length && fields.map((field, i) => {
-        const fieldError = isSubmitting && formError && !!~formError.toLowerCase().indexOf(field.name)
-        const hasErrors = errors[field.name]
-        const wasTouched = touched[field.name]
-        return (
-          <Element key={i}>
-            <Label htmlFor={field.name}>{field.label}</Label>
-            <Input name={field.name} id={field.name} value={values[field.name]}  onChange={handleChange} type={field.type} autoComplete={field.autoComplete && field.autoComplete} onBlur={handleBlur} />
-            {hasErrors ? wasTouched && 
-            <Error visible={hasErrors && wasTouched}>{hasErrors}</Error> 
-            : fieldError && 
-            <Error visible={isSubmitting && fieldError}>{formError}</Error>
-            }
-          </Element>
-        )
-      })
-
-      return (
-      <SForm as='form' onSubmit={handleSubmit}>
-        <Title>{title}</Title>
-        {renderFields}
-        <Button type="submit" center>{button}</Button>
-      </SForm>
-      )}
+class Form extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      toCenter: false,
+      desktop: true
     }
-    </Formik>
-  )
+    this.wrppr = React.createRef()
+  }
 
-  if(overlaying) return (
-    <Container>
-      <Backdrop onClick={onClick} />
-      <SWrapper>
-      <CrossButton onClick={onClick} open={open} ariaLabel={ariaLabel} overlaying />
-      {FormEssentials}
-      </SWrapper>
+  handlesScroll = () => {
+    const stopScroll = this.state.desktop ? 400 : 290
+    const scrolledAmount =
+      document.body.scrollTop || document.documentElement.scrollTop
+    if (scrolledAmount > stopScroll) {
+      this.setState({ toCenter: true })
+    } else {
+      this.setState({ toCenter: false })
+    }
+  }
+
+  mediaChanged = (mq) => {
+    this.setState({ desktop: mq.matches })
+    return mq
+  }
+
+  componentDidMount() {
+    if(this.props.overlaying) {
+      if(!window.matchMedia) return
+      this.mq = window.matchMedia('(min-width: 640px')
+      this.mediaChanged(this.mq).addListener(this.mediaChanged)
+      this.handlesScroll()
+      window.addEventListener('scroll', this.handlesScroll)
+      window.addEventListener('resize', this.resizeHandler)
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.props.overlaying) {
+      window.removeEventListener('scroll', this.handlesScroll)
+      window.removeEventListener('resize', this.resizeHandler)
+      this.mq && this.mq.removeListener(this.mediaChanged)
+    }
+    
+  }
+
+  render() {
+    const { onClick, handleSubmit, title, fields, button, open, overlaying, initialValues, validationSchema, formError, ariaLabel } = this.props
+    const FormEssentials = (
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => {
+        handleSubmit(values)}}>
+        {props => {
+          const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props
+          const renderFields = fields.length && fields.map((field, i) => {
+            const fieldError = isSubmitting && formError && !!~formError.toLowerCase().indexOf(field.name)
+            const hasErrors = errors[field.name]
+            const wasTouched = touched[field.name]
+            return (
+              <Element key={i}>
+              <Label htmlFor={field.name}>{field.label}</Label>
+              <Input name={field.name} id={field.name} value={values[field.name]}  onChange={handleChange} type={field.type} autoComplete={field.autoComplete && field.autoComplete} onBlur={handleBlur} min={field.min} max={field.max} />
+              {hasErrors ? wasTouched && 
+              <Error visible={hasErrors && wasTouched}>{hasErrors}</Error> 
+              : fieldError && 
+              <Error visible={isSubmitting && fieldError}>{formError}</Error>
+              }
+            </Element>
+          )
+        })
+        
+        return (
+          <SWrapper center={always || (overlaying && this.state.toCenter)} ref={this.wrppr}>
+            {overlaying && <CrossButton onClick={onClick} open={open} ariaLabel={ariaLabel} overlaying />}
+            <SForm as='form' onSubmit={handleSubmit}>
+              <Title>{title}</Title>
+              {renderFields}
+              <Button type="submit" center>{button}</Button>
+            </SForm>
+          </SWrapper>
+        )}
+      }
+      </Formik>
+    )
+
+    if(overlaying) return (
+      <Container>
+    <Backdrop onClick={onClick} />
+    {FormEssentials}
     </Container>
-  )
-
-  return (
-    FormEssentials
-  )
-}
-
+    )
+    
+    return (
+      FormEssentials
+    )
+  }
+} 
+    
 export default Form
