@@ -194,7 +194,7 @@ class Form extends Component {
         })
         
         return (
-          <SWrapper center={always || (overlaying && this.state.toCenter)} ref={this.wrppr}>
+          <SWrapper center={overlaying && this.state.toCenter} ref={this.wrppr}>
             {overlaying && <CrossButton onClick={onClick} open={open} ariaLabel={ariaLabel} overlaying />}
             <SForm as='form' onSubmit={handleSubmit}>
               <Title>{title}</Title>

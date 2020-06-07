@@ -20,9 +20,14 @@ const Bar = styled.nav`
   `}
 `
 
+const Logo = styled.img`
+  width: 130px;
+`
+
 const Nav = styled(Wrapper)`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   & > ul {
     & > li {
@@ -52,7 +57,7 @@ const Navigation = (props) => {
   return (
     <Bar withHeader={/events$/.test(location.pathname)}>
       <Nav>
-        <p>Tbay</p>
+        <Logo src='/img/logo.svg' />
         <ul>
           { !/events$/.test(location.pathname) && <li><Button color="inherit" onClick={() => history.push('/events')}>All Events</Button></li> }
           { renderUserOptions }
