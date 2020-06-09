@@ -18,7 +18,7 @@ export const Card = styled.div`
 export const Thumb = styled.div`
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   width: 35%;
   flex-grow: 0;
   flex-shrink: 0;

@@ -60,8 +60,8 @@ export default class TicketController {
     ){
         const ticket = await Ticket.findOne(id)
         if(!ticket) throw new NotFoundError("Can't find ticket")
-
-        if(ticket.user.id !== user.id) throw new ForbiddenError("You are not the author of this ticket")
+        
+        if(ticket.user.id !== user.id || !user.admin) throw new ForbiddenError("You are not the author of this ticket")
 
         return Ticket.merge(ticket, update).save()
     }
