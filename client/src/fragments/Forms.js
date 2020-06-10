@@ -77,6 +77,16 @@ export const Input = styled.input`
   border-radius: 20px;
 `
 
+export const Textarea = styled.textarea`
+  ${({ auto }) => auto && 'margin-right: 20px'};
+  padding: 0px 10px;
+  width: ${({ auto }) => !auto && '69%'};
+  font-size: 16px;	
+  font-family: 'Quicksand', sans-serif;
+  border: 1px solid #3c13d3;
+  border-radius: 20px;
+`
+
 export const Button = styled.button`
   margin-top: 20px;
   padding: 0 15px;
@@ -183,7 +193,7 @@ class Form extends Component {
             return (
               <Element key={i}>
               <Label htmlFor={field.name}>{field.label}</Label>
-              <Input name={field.name} id={field.name} value={values[field.name]}  onChange={handleChange} type={field.type} autoComplete={field.autoComplete && field.autoComplete} onBlur={handleBlur} min={field.min} max={field.max} />
+              <Input name={field.name} id={field.name} value={values[field.name]}  onChange={handleChange} type={field.type} autoComplete={field.autoComplete && field.autoComplete} onBlur={handleBlur} min={field.min} max={field.max} as={field.textarea ? 'textarea' : 'input'} rows={field.textarea ? 5 : null} />
               {hasErrors ? wasTouched && 
               <Error visible={hasErrors && wasTouched}>{hasErrors}</Error> 
               : fieldError && 

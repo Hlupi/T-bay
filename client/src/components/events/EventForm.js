@@ -52,7 +52,7 @@ class EventForm extends PureComponent {
       {
         label: 'Description:',
         name: 'description',
-        type: 'text'
+        textarea: true
       },
       {
         label: 'Picture (url):',
