@@ -24,25 +24,33 @@ export const createComment = (comment) => (dispatch, getState) => {
   if (isExpired(jwt)) return dispatch(logout())
 
   request
-    .post(`${baseUrl}/comments`)
-    .set('Authorization', `Bearer ${jwt}`)
-    .send(comment)
-    .then(response => dispatch({
-      type: ADD_COMMENT,
-      payload: response.body
-    }))
-    .catch(err => console.error(err))
+  .post(`${baseUrl}/comments`)
+  .set('Authorization', `Bearer ${jwt}`)
+  .send(comment)
+  .then(response => dispatch({
+    type: ADD_COMMENT,
+    payload: response.body
+  }))
+  .catch(err => console.error(err))
 }
 
 export const deleteComment = (id) =>  (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
-
-  request
-  .delete(`${baseUrl}/comments/${id}`)
-  .set('Authorization', `Bearer ${jwt}`)
-  .then(response => dispatch({
-    type: DELETE_COMMENT,
-    payload: id
-  }))
+  const notQuiteAdmin = state.isAdmin === false
+  
+  if(notQuiteAdmin) {
+    dispatch({
+      type: DELETE_COMMENT,
+      payload: id
+    })
+  } else {
+    request
+    .delete(`${baseUrl}/comments/${id}`)
+    .set('Authorization', `Bearer ${jwt}`)
+    .then(response => dispatch({
+      type: DELETE_COMMENT,
+      payload: id
+    }))
+  }
 }

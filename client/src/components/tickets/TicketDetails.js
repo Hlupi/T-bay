@@ -40,7 +40,8 @@ class TicketDetails extends PureComponent {
     const { event, ticket, user, isAuthor, isAdmin, newDates } = this.props
     const { edit } = this.state
 
-    const allowEdit = isAuthor || isAdmin
+    const likeAdmin = isAdmin  !== null
+    const allowEdit = isAuthor || likeAdmin
 
     if (!ticket || !event) return null
 
@@ -52,7 +53,7 @@ class TicketDetails extends PureComponent {
             <When>{newDates && dates(newDates.starts, newDates.ends)}</When>
             <Toolbar flex>
               <H1>Ticket for {event.name}</H1>
-              {isAdmin &&  <CrossButton open red onClick={() => this.deleteTicket(ticket.id)} />}
+              {likeAdmin &&  <CrossButton open red onClick={() => this.deleteTicket(ticket.id)} />}
             </Toolbar>
             <Seller>Sold by {ticket.user.firstName}</Seller>
             <Toolbar flex>

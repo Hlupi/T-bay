@@ -50,8 +50,15 @@ export const editTicket = (ticketId, updates) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
   const risk = state.ticket.risk
+  const notQuiteAdmin = state.isAdmin === false
 
-  request
+  if(notQuiteAdmin) {
+    dispatch({
+      type: EDIT_TICKET,
+      payload: { ...updates, risk }
+    })
+  } else {
+    request
     .put(`${baseUrl}/tickets/${ticketId}`)
     .set('Authorization', `Bearer ${jwt}`)
     .send(updates)
@@ -59,17 +66,26 @@ export const editTicket = (ticketId, updates) => (dispatch, getState) => {
       type: EDIT_TICKET,
       payload: { ...response.body, risk }
     }))
+  }
 }
 
 export const deleteTicket = (ticketId) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
+  const notQuiteAdmin = state.isAdmin === false
 
-  request
-  .delete(`${baseUrl}/tickets/${ticketId}`)
-  .set('Authorization', `Bearer ${jwt}`)
-  .then(response => dispatch({
-    type: DELETE_TICKET,
-    payload: ticketId
-  }))
+  if(notQuiteAdmin) {
+    dispatch({
+      type: DELETE_TICKET,
+      payload: ticketId
+    })
+  } else {
+    request
+    .delete(`${baseUrl}/tickets/${ticketId}`)
+    .set('Authorization', `Bearer ${jwt}`)
+    .then(response => dispatch({
+      type: DELETE_TICKET,
+      payload: ticketId
+    }))
+  }
 }

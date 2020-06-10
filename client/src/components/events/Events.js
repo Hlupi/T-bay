@@ -33,9 +33,11 @@ class Events extends PureComponent {
     const renderEvents = events.length > 0 ?  events.map((event, i) => {
       const displayControls = control && control === event.id
       const displayDates = dates(event.starts, event.ends)
+      const allowControls = isAdmin !== null
+      
       return (
-        <Card key={i} onMouseEnter={isAdmin && (() => this.showControls(event.id))} onMouseLeave={isAdmin 
-        && this.hideControls}>
+        <Card key={i} onMouseEnter={allowControls ? (() => this.showControls(event.id)) : undefined} onMouseLeave={allowControls 
+        ? this.hideControls : undefined}>
           <StyledLink to={`/events/${event.id}`}>
             <ThumbContainer>
               <Thumb style={{ backgroundImage: `url('${event.picture}')` }} />
@@ -46,7 +48,7 @@ class Events extends PureComponent {
               <When events>{displayDates}</When>
             </Content>
           </StyledLink>
-          {isAdmin && displayControls &&
+          {allowControls && displayControls &&
             <AdminControls overlaying>
               <Button onClick={() => onEdit(event)} overlaying>edit</Button>
               <CrossButton open onClick={() => this.onDelete(event.id)} overlaying small ariaLabel="Delete event" />

@@ -43,6 +43,10 @@ export const Card = styled.li`
     &:not(:nth-child(3n+1)) {
       margin-left: auto;
     }
+
+    &:last-child {
+      margin-left: 0;
+    }
   }
 `
 

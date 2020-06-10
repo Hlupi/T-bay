@@ -46,10 +46,17 @@ export const getEvent = (eventId) => (dispatch, getState) => {
 export const createEvent = (event) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
+  const notQuiteAdmin = state.isAdmin === false
 
   if (isExpired(jwt)) return dispatch(logout())
 
-  request
+  if(notQuiteAdmin) {
+    dispatch({
+      type: ADD_EVENT,
+      payload: event
+    })
+  } else {
+    request
     .post(`${baseUrl}/events`)
     .set('Authorization', `Bearer ${jwt}`)
     .send(event)
@@ -58,33 +65,50 @@ export const createEvent = (event) => (dispatch, getState) => {
       payload: response.body
     }))
     .catch(err => console.error(err))
-}
+    }
+  }
 
 export const updateEvent = (eventId, updates) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
-
-  request
-  .put(`${baseUrl}/events/${eventId}`)
-  .set('Authorization', `Bearer ${jwt}`)
-  .send(updates)
-  .then(response => 
+  const notQuiteAdmin = state.isAdmin === false
+  
+  if(notQuiteAdmin) {
     dispatch({
-    type: EDIT_EVENT,
-    payload: response.body
-  })
+      type: EDIT_EVENT,
+      payload: updates
+    })
+  } else {
+    request
+    .put(`${baseUrl}/events/${eventId}`)
+    .set('Authorization', `Bearer ${jwt}`)
+    .send(updates)
+    .then(response => 
+      dispatch({
+      type: EDIT_EVENT,
+      payload: response.body
+    })
   )
+  }
 }
 
 export const deleteEvent = (eventId)  => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
+  const notQuiteAdmin = state.isAdmin === false
 
+  if(notQuiteAdmin) {
+    dispatch({
+      type: DELETE_EVENT,
+      payload: eventId
+    })
+  } else {
   request
   .delete(`${baseUrl}/events/${eventId}`)
   .set('Authorization', `Bearer ${jwt}`)
   .then(response => dispatch({
     type: DELETE_EVENT,
     payload: eventId
-  }))
+    }))
+  }
 }

@@ -59,6 +59,7 @@ class EventsList extends PureComponent {
   render() {
     const { isAdmin, events } = this.props
     const { adding, editing, eventToEdit, searchValue, start, end } = this.state
+    const allowControls = isAdmin !== null
 
     const searchedEvents = events.sort((a, b) => a.starts - b.starts).filter(event => !!~`${event.name} ${event.description} ${event.starts} ${event.ends}`.toLowerCase().indexOf(searchValue.toLowerCase()))
 
@@ -70,8 +71,8 @@ class EventsList extends PureComponent {
         <Container relative as="section">
           <Wrapper id="page-top">
             <Toolbar events flex>
-              <Search type="text" value={searchValue}  onChange={this.handleSearch} aria-label="Search events" placeholder="Search events" withAdmin={isAdmin} />
-              { isAdmin && <CrossButton onClick={this.toggleAdding} ariaLabel="Add event" /> }
+              <Search type="text" value={searchValue}  onChange={this.handleSearch} aria-label="Search events" placeholder="Search events" withAdmin={allowControls} />
+              { allowControls && <CrossButton onClick={this.toggleAdding} ariaLabel="Add event" /> }
             </Toolbar>
             <Events onEdit={this.toggleEditing} searchValue={searchValue} events={renderEvents} />
             {searchedEvents.length > 9 &&
@@ -80,9 +81,9 @@ class EventsList extends PureComponent {
               <Pager disabled={end>= searchedEvents.length} onClick={this.handleNextPage} aria-label="Next page"><Arrow disabled={end>= searchedEvents.length} /></Pager>
               </Pagination>
               }
-            { isAdmin && adding && 
+            { allowControls && adding && 
               <EventForm close={this.toggleAdding} open={adding} /> }
-            { isAdmin && editing && 
+            { allowControls && editing && 
               <EventForm editing initialValues={eventToEdit} close={this.toggleEditing} open={editing} /> }
           </Wrapper>
         </Container>

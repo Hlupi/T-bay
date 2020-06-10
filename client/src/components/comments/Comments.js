@@ -18,13 +18,15 @@ class Comments extends PureComponent {
 
   render() {
     const { comments, isAdmin } = this.props
+
+    const allowEdit = isAdmin !== null
      
     const hasComments = comments.length
     const renderComments = hasComments && comments.map((comment, i) => (
       <Comment key={i}>
         <Author comment>{comment.user.firstName}</Author>
-        <Content admin={isAdmin}>{comment.text}</Content>
-        {isAdmin &&  <CrossButton open red onClick={() => this.onDelete(comment.id)} small />}
+        <Content admin={allowEdit}>{comment.text}</Content>
+        {allowEdit &&  <CrossButton open red onClick={() => this.onDelete(comment.id)} small />}
       </Comment>
     ))
 
