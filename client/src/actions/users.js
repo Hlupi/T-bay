@@ -11,6 +11,7 @@ export const USER_SIGNUP_SUCCESS = 'USER_SIGNUP_SUCCESS'
 export const USER_SIGNUP_FAILED = 'USER_SIGNUP_FAILED'
 
 export const CHECK_ADMIN = 'CHECK_ADMIN'
+export const GET_USER_NAME = 'GET_USER_NAME'
 
 export const logout = () => ({
   type: USER_LOGOUT
@@ -40,11 +41,17 @@ const checkAdmin = (admin) => ({
   payload: admin
 })
 
+const getUserName = name => ({
+  type: GET_USER_NAME,
+  payload: name
+})
+
 export const login = (email, password) => (dispatch) =>
   request
     .post(`${baseUrl}/logins`)
     .send({ email, password })
-    .then(result => dispatch(userLoginSuccess(result.body)))
+    .then(result => {
+      dispatch(userLoginSuccess(result.body))})
     .catch(err => {
       if (err.status === 400) {
         dispatch(userLoginFailed(err.response.body.message))
@@ -70,7 +77,7 @@ export const signup = (firstName, lastName, email, password) => (dispatch) =>
       }
     })
 
-export const getAdmin = (currentUser) => (dispatch, getState) => {
+export const getAdmin= (currentUser) => (dispatch, getState) => {
   const state = getState()
   if (!state.currentUser) return
   const jwt = state.currentUser.jwt
@@ -79,7 +86,10 @@ export const getAdmin = (currentUser) => (dispatch, getState) => {
   request
     .get(`${baseUrl}/users/${user}`)
     .set('Authorization', `Bearer ${jwt}`)
-    .then(response => dispatch(checkAdmin(response.body)))
+    .then(response => {
+      dispatch(getUserName(response.body.firstName))
+      dispatch(checkAdmin(response.body.admin))
+    })
     .catch(err => {
       if (err.status === 400) {
         dispatch(logout())

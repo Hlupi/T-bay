@@ -20,9 +20,11 @@ export const getSelectedComments = (ticketId) => (dispatch, getState) => {
 export const createComment = (comment) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
+  const isAdmin = state.isAdmin
 
   if (isExpired(jwt)) return dispatch(logout())
 
+  if(isAdmin) {
   request
   .post(`${baseUrl}/comments`)
   .set('Authorization', `Bearer ${jwt}`)
@@ -32,6 +34,14 @@ export const createComment = (comment) => (dispatch, getState) => {
     payload: response.body
   }))
   .catch(err => console.error(err))
+  } else {
+    delete comment.ticket
+    const transforemdComment = {...comment, user: { firstName: state.currentUser.user } }
+    dispatch({
+      type: ADD_COMMENT,
+      payload: transforemdComment
+    })
+  }
 }
 
 export const deleteComment = (id) =>  (dispatch, getState) => {
