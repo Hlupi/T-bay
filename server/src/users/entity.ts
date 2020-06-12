@@ -12,7 +12,7 @@ export default class User extends BaseEntity {
   id?: number;
 
   @Column('boolean',  { nullable: true })
-  @Exclude({ toPlainOnly: true })
+  // @Exclude({ toPlainOnly: true }) //get user name + admin (for 'posting' comments)
   admin: boolean;
 
   @IsString()

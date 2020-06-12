@@ -23,7 +23,7 @@ export default class UserController {
     @Param('id') id: number
   ) {
     const user = await User.findOne(id)
-    return user!.admin
+    return user
   }
 
   @Authorized()
