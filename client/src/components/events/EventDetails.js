@@ -1,63 +1,91 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { getEvent } from '../../actions/events';
-import { getSelectedTickets, createTicket } from '../../actions/tickets';
-import { Link } from 'react-router-dom';
-import AddTicket from '../tickets/AddTicket';
-import './Events.css'
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 
-class EventDetails extends PureComponent{
+import { getEvent, deleteEvent } from '../../actions/events'
+import { dates } from './dates'
+import { Header, Container, Wrapper, Toolbar, AdminControls, Button } from '../../fragments/Layout'
+import { H1, H2, When, Description } from '../../fragments/Content'
+import CrossButton from '../../fragments/Button'
+import EventForm from './EventForm'
+import TicketForm from '../tickets/TicketForm'
+import Tickets from '../tickets/Tickets'
+
+
+class EventDetails extends PureComponent {
+  state = {
+    adding: false,
+    editing: false
+  }
 
   componentWillMount() {
-      this.props.getEvent(this.props.match.params.id)
-      this.props.getSelectedTickets(this.props.match.params.id) 
+    this.props.getEvent(this.props.match.params.id)
+
   }
 
-  createTicket = (ticket) => {
-      ticket.event = this.props.event
-      this.props.createTicket(ticket)   
+  toggleEditing = () => {
+    this.setState((prevState, props) => ({
+      editing: !prevState.editing
+    }))
   }
-  
+
+  toggleAdding = () => {
+    this.setState((prevState, props) => ({
+      adding: !prevState.adding
+    }))
+  }
+
+  deleteEvent = (id) => {
+    this.props.deleteEvent(id)
+    this.props.history.push('/')
+  }
+
   render() {
-      const {event, tickets} = this.props
-      if (!event) return null
+    const { event, user, isAdmin, newDates } = this.props
+    const { adding, editing } = this.state
 
-      return (
-          <div className="event-details">
-              {!event.id && <div>Loading...</div>}
-              {event.id && (<div>
-                  <img src={event.picture} alt=''className="event-image" />                        
-                  <h2>{event.name}</h2>
-                  <p>{event.description}</p>
-                  <p>When: {event.starts} - {event.ends}</p>
-              </div>)}  
+    if (!event) return null
 
-              <div>
-                  {tickets.map(ticket => (
-                      <div key={ticket.id}>
-                      <p>{ticket.user.firstName} {ticket.price} : <Link to={`/tickets/${ticket.id}`}>{ticket.description}</Link></p>
-                      </div>
-                  ))}
-              </div>
+    return (
+      <React.Fragment>
+        {!event.id && <div>Loading...</div>}
 
-              {this.props.currentUser && <div className="add-ticket">
-              <h2>Add a ticket:</h2>
-              <AddTicket onSubmit={this.createTicket} />
-              </div>}
-          </div>       
-      )
+        {event.id &&
+          <React.Fragment>
+            <Header style={{ backgroundImage: `url('${event.picture}')` }} />
+            <Container relative spacingTop>
+              <Wrapper event>
+                <When>{newDates && dates(newDates.starts, newDates.ends)}</When>
+                <Toolbar event>
+                  <H1>{event.name}</H1>
+                  {isAdmin &&
+                    <AdminControls>
+                      <Button onClick={this.toggleEditing}>edit</Button>
+                      <CrossButton open red onClick={() => this.deleteEvent(event.id)} />
+                    </AdminControls>}
+                </Toolbar>
+                <H2 addSpacing>Details</H2>
+                <Description event>{event.description}</Description>
+                <Tickets onClick={this.toggleAdding} />
+              </Wrapper>
+
+              {user && adding && <TicketForm close={this.toggleAdding} open={adding} />}
+
+              {isAdmin && editing &&  <EventForm initialValues={event} editing close={this.toggleEditing} open={editing} title="Edit this event" /> }
+            </Container>
+          </React.Fragment>
+        }
+      </React.Fragment>
+    )
   }
-
 }
 
-const mapStateToProps = function(state) {
+const mapStateToProps = function (state) {
   return {
-      event: state.event,
-      tickets: state.tickets,
-      currentUser: state.currentUser 
+    event: state.event,
+    user: state.currentUser,
+    isAdmin: state.isAdmin,
+    newDates: state.event && state.events.filter(item => item.id === state.event.id)[0]
   }
 }
 
-export default connect(mapStateToProps, { getEvent
-  , getSelectedTickets, createTicket 
-})(EventDetails)
+export default connect(mapStateToProps, { getEvent, deleteEvent })(EventDetails)

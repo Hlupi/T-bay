@@ -1,130 +1,94 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
-import { getTicket, editTicket, getAllTickets } from '../../actions/tickets';
-import { getSelectedComments, createComment } from '../../actions/comments';
-import AddComment from './AddComment'
-import AddTicket from './AddTicket'
+
+import { getEvent } from '../../actions/events'
+import { getTicket, deleteTicket } from '../../actions/tickets'
+import { userId } from '../../jwt'
+import { dates } from '../events/dates'
+import { Header, Container, Wrapper, Toolbar, Button } from '../../fragments/Layout'
+import { H1, H2, When, Description } from '../../fragments/Content'
+import { Seller, Card, Thumb, Price, Risk } from '../../fragments/Ticket'
+import CrossButton from '../../fragments/Button'
+import TicketForm from './TicketForm'
+import Comments from '../comments/Comments'
+import AddComment from '../comments/AddComment'
+
 
 class TicketDetails extends PureComponent {
   state = {
-      edit: false
-    }
+    edit: false
+  }
+
+  componentDidMount() {
+    this.props.getEvent(this.props.match.params.ed)
+    this.props.getTicket(this.props.match.params.ed, this.props.match.params.id)
+  }
   
   toggleEdit = () => {
-      this.setState({
-          edit: !this.state.edit
-      })
-    }
-
-  componentWillMount() {
-      this.props.getTicket(this.props.match.params.id)
-      this.props.getAllTickets()
-      this.props.getSelectedComments(this.props.match.params.id)
+    this.setState((prevState) => ({
+      edit: !prevState.edit
+    }))
   }
 
-  editTicket = (ticket) => {
-    this.props.editTicket(this.props.match.params.id, ticket)
-    this.toggleEdit()
-  }
-
-  addComment = (comment) => {
-    comment.ticket = this.props.ticket
-    this.props.createComment(comment)
-  }
-
-  commentsRisk(){
-      const comments = this.props.ticket.comments.length
-      if (comments > 3) return 5 
-      else return 0
-  }
-
-  priceRisk(){
-      const ticketPrice = this.props.ticket.price
-      const allPrices = this.props.tickets.map(ticket => ticket.price)
-      const totalPrices = allPrices.reduce((a, b) => a+ b, 0)
-      const averagePrice = totalPrices/this.props.tickets.length
-      const risk = ((averagePrice - ticketPrice) / averagePrice) * 100
-      if( risk < -10) return -10
-      else return risk
-  }
-              
-  userRisk(){
-      const userIds = this.props.tickets.map(ticket => ticket.user.id)
-      const ticketAuthor = this.props.ticket.user.id
-      const count = userIds.filter(x => x === ticketAuthor).length
-      if(count === 1) return 10
-      else return 0
-  }   
-  
-  timeRsik(){
-      const time = this.props.ticket.postedAt.slice(11, 13)
-      if(time > 8 && time < 17) return -10
-      else return 0
-  }
-      
-  
-  totalRisk() {
-    const minRisk = 5
-    const maxRisk = 95
-    const risk = this.commentsRisk() + this.priceRisk() + this.userRisk() + this.timeRsik()
-    if(risk < minRisk) return minRisk
-    if(risk > maxRisk) return maxRisk
-    else return parseFloat(risk).toFixed(0)
+  deleteTicket = (id) => {
+    const { ed } = this.props.match.params
+    this.props.deleteTicket(id)
+    this.props.history.push(`/events/${ed}`)
   }
 
   render() {
-      const {ticket, comments} = this.props
-      if(!ticket) return null
-        
-      return(
-            <div className="ticket-details">
-                {!ticket.id && <div>Loading...</div>}
-                {ticket.id && (<div>
-                    <h2>Ticket from {ticket.user.firstName}</h2>
-                    <p>FRAUDULENCE RISK: {this.totalRisk()}%</p>
-                    <p>EUR {ticket.price}</p>
-                  <img src={ticket.picture} alt='' className="ticket-image"/>                        
-                  <p>{ticket.description}</p>
-              </div>)} 
+    const { event, ticket, user, isAuthor, isAdmin, newDates } = this.props
+    const { edit } = this.state
 
-              {
-                  this.props.currentUser &&
-                  this.state.edit &&
-                  <AddTicket initialValues={ticket} onSubmit={this.editTicket} />
-              }
+    const likeAdmin = isAdmin  !== null
+    const allowEdit = isAuthor || likeAdmin
 
-              {
-                  this.props.currentUser && 
-                  !this.state.edit &&
-                  <div>
-                      <button onClick={ this.toggleEdit }>edit</button>
-                  </div>
-              }
+    if (!ticket || !event) return null
 
-              <div>
-                  <h3>Comments</h3>
-                  {comments.map(comment => (
-                      <p key={comment.id}><b>{comment.user.firstName}:</b> {comment.text}</p>
-                  ))}
-              </div>
-
-              {this.props.currentUser && <div className="add-comment">
-              <AddComment onSubmit={this.addComment} />
-              </div>}
-
-            </div>
-        )
+    return (
+      <React.Fragment>
+        <Header style={{ backgroundImage: `url('${event.picture}')` }} />
+        <Container relative>
+          <Wrapper ticket>
+            <When>{newDates && dates(newDates.starts, newDates.ends)}</When>
+            <Toolbar flex>
+              <H1>Ticket for {event.name}</H1>
+              {likeAdmin &&  <CrossButton open red onClick={() => this.deleteTicket(ticket.id)} />}
+            </Toolbar>
+            <Seller>Sold by {ticket.user.firstName}</Seller>
+            <Toolbar flex>
+              <H2 ticket addSpacing>Details</H2>
+              {allowEdit && <Button onClick={this.toggleEdit}>edit</Button> }
+            </Toolbar>
+            <Card>
+              <Thumb style={{ backgroundImage: `url('${ticket.picture}')` }} />
+              <Description ticket>{ticket.description}</Description>
+              <Price>${ticket.price}</Price>
+            </Card>
+            <Toolbar addSpacing flex>
+              <H2 ticket>Estimated risk:</H2>
+              <Risk>{ticket.risk}%</Risk>
+            </Toolbar>
+            <H2 ticket addSpacing>Comments</H2>
+            <Comments />
+            {user && <AddComment />}
+            {allowEdit && edit && <TicketForm editing close={this.toggleEdit} open={edit} />}
+          </Wrapper>
+        </Container>
+      </React.Fragment>
+    )
   }
 }
 
-const mapStateToProps = function(state) {
+const mapStateToProps = function (state) {
   return {
-      ticket: state.ticket,
-      comments: state.comments,
-      currentUser: state.currentUser,
-      event: state.event, 
-      tickets: state.tickets
+    event: state.event,
+    ticket: state.ticket,
+    user: state.currentUser,
+    isAuthor: state.currentUser && state.ticket && userId(state.currentUser.jwt) === state.ticket.user.id,
+    isAdmin: state.isAdmin,
+    newDates: state.event && state.events.filter(item => item.id === state.event.id)[0]
   }
 }
 
-export default connect(mapStateToProps, { getTicket, getAllTickets, getSelectedComments, createComment, editTicket })(TicketDetails)
+export default connect(mapStateToProps, { getTicket, getEvent, deleteTicket })(TicketDetails)

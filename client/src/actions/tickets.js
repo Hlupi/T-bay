@@ -1,71 +1,91 @@
 import * as request from 'superagent'
-import { baseUrl }  from '../constants'
+import { baseUrl } from '../constants'
 import { logout } from './users'
 import { isExpired } from '../jwt'
 
-export const GOT_ALL_TICKETS = 'GOT_ALL_TICKETS'
 export const GOT_SELECTED_TICKETS = 'GOT_SELECTED_TICKETS'
 export const GOT_TICKET = 'GOT_TICKET'
 export const ADD_TICKET = 'ADD_TICKET'
 export const EDIT_TICKET = 'EDIT_TICKET'
+export const DELETE_TICKET = 'DELETE_TICKET'
 
-export const getAllTickets = () => (dispatch) => {
-    request
-    .get(`${ baseUrl }/tickets-all`)
-    .then( response => dispatch({
-        type: GOT_ALL_TICKETS,
-        payload: response.body.allTickets
+export const getSelectedTickets = (eventId) => (dispatch) => {
+  request
+    .get(`${baseUrl}/events/${eventId}/tickets/`)
+    .then(response => dispatch({
+      type: GOT_SELECTED_TICKETS,
+      payload: response.body.tickets
     }))
     .catch(err => alert(err))
 }
 
-export const getSelectedTickets = (eventId) => (dispatch) => {
+export const getTicket = (eventId, ticketId) => (dispatch) => {
   request
-  .get(`${ baseUrl }/events/tickets/${ eventId }`)
-  .then( response => dispatch({
-      type: GOT_SELECTED_TICKETS,
-      payload: response.body.tickets
-  }))
-  .catch(err => alert(err))
-}
-
-export const getTicket = (ticketId) => (dispatch) => {
-    request 
-    .get(`${baseUrl}/tickets/${ ticketId }`)
-    .then( response => dispatch({
-        type: GOT_TICKET,
-        payload: response.body
+    .get(`${baseUrl}/events/${eventId}/tickets/${ticketId}`)
+    .then(response => dispatch({
+      type: GOT_TICKET,
+      payload: response.body
     }))
     .catch(err => alert(err))
 }
 
 export const createTicket = (ticket) => (dispatch, getState) => {
-    const state = getState()
-    const jwt = state.currentUser.jwt
+  const state = getState()
+  const jwt = state.currentUser.jwt
 
-    if (isExpired(jwt)) return dispatch(logout())
+  if (isExpired(jwt)) return dispatch(logout())
 
-    request
+  request
     .post(`${baseUrl}/tickets`)
     .set('Authorization', `Bearer ${jwt}`)
     .send(ticket)
     .then(response => dispatch({
-        type: ADD_TICKET,
-        payload: response.body
+      type: ADD_TICKET,
+      payload: response.body
     }))
     .catch(err => alert(err))
 }
 
 export const editTicket = (ticketId, updates) => (dispatch, getState) => {
-    const state = getState()
-    const jwt = state.currentUser.jwt
-    
+  const state = getState()
+  const jwt = state.currentUser.jwt
+  const risk = state.ticket.risk
+  const notQuiteAdmin = state.isAdmin === false
+
+  if(notQuiteAdmin) {
+    dispatch({
+      type: EDIT_TICKET,
+      payload: { ...updates, risk }
+    })
+  } else {
     request
     .put(`${baseUrl}/tickets/${ticketId}`)
     .set('Authorization', `Bearer ${jwt}`)
     .send(updates)
     .then(response => dispatch({
       type: EDIT_TICKET,
-      payload: response.body
+      payload: { ...response.body, risk }
     }))
+  }
+}
+
+export const deleteTicket = (ticketId) => (dispatch, getState) => {
+  const state = getState()
+  const jwt = state.currentUser.jwt
+  const notQuiteAdmin = state.isAdmin === false
+
+  if(notQuiteAdmin) {
+    dispatch({
+      type: DELETE_TICKET,
+      payload: ticketId
+    })
+  } else {
+    request
+    .delete(`${baseUrl}/tickets/${ticketId}`)
+    .set('Authorization', `Bearer ${jwt}`)
+    .then(response => dispatch({
+      type: DELETE_TICKET,
+      payload: ticketId
+    }))
+  }
 }

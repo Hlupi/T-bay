@@ -14,12 +14,11 @@ export default class Comment extends BaseEntity {
   @Column('text', {nullable: false})
   text: string
 
-
-  // @Exclude({toPlainOnly:true})
+  
   @ManyToOne(_ => User, user => user.comments, {eager:true})
   user: User
 
-  @ManyToOne(_ => Ticket, ticket => ticket.comments)
+  @ManyToOne(_ => Ticket, ticket => ticket.comments, { onDelete: "CASCADE" })
   ticket: Ticket
 
 }

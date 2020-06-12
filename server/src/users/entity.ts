@@ -11,6 +11,10 @@ export default class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
+  @Column('boolean',  { nullable: true })
+  // @Exclude({ toPlainOnly: true }) //get user name + admin (for 'posting' comments)
+  admin: boolean;
+
   @IsString()
   @MinLength(2)
   @Column("text", { nullable: false })
@@ -23,6 +27,7 @@ export default class User extends BaseEntity {
 
   @IsEmail()
   @Column("text", { nullable: false })
+  @Exclude({ toPlainOnly: true })
   email: string;
 
   @IsString()

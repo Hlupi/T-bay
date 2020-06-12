@@ -1,43 +1,54 @@
 import React, { PureComponent } from 'react'
+import * as Yup from 'yup'
+
+import Form from '../../fragments/Forms'
+
+const LoginSchema = Yup.object({
+	email: Yup.string()
+		.email('This looks like an invalid email')
+		.required('Please fill in your email adress'),
+	password: Yup.string()
+		.required('Password is required')
+})
+
+const initialValues = {
+	email: '',
+	password: ''
+}
+
 
 export default class LoginForm extends PureComponent {
-	state = {}
 
-	handleSubmit = (e) => {
-		e.preventDefault()
-		this.props.onSubmit(this.state)
+	handleSubmit = (data) => {
+		this.props.onSubmit(data)
 	}
 
-	handleChange = (event) => {
-    const {name, value} = event.target
-
-    this.setState({
-      [name]: value
-    })
-  }
-
 	render() {
+		const fields = [
+			{
+				label: 'Email',
+				name: 'email',
+				type: 'email',
+				autoComplete: "username"
+			},
+			{
+				label: 'Password',
+				name: 'password',
+				type: 'password',
+				autoComplete: "current-password"
+			},
+		]
+
 		return (
-      <div className="login-form">
-  			<form onSubmit={this.handleSubmit}>
-  				<label>
-            Email <br />
-            <input type="email" name="email" value={
-  						this.state.email || ''
-  					} onChange={ this.handleChange } />
-          </label>
-          <br />
-
-  				<label>
-            Password <br />
-            <input type="password" name="password" value={
-  						this.state.password || ''
-  					} onChange={ this.handleChange } />
-          </label>
-          <br />
-
-  				<button type="submit" className="btn">Login</button>
-  			</form>
-		  </div>)
+			<Form
+				initialValues={initialValues}
+				validationSchema={LoginSchema}
+				handleSubmit={this.handleSubmit}
+				fields={fields}
+				formError={this.props.formError}
+				title="Welcome back"
+				button="Login"
+			/>
+		)
 	}
 }

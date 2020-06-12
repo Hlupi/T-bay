@@ -1,59 +1,66 @@
 import * as request from 'superagent'
-import { baseUrl }  from '../constants'
+import { baseUrl } from '../constants'
 import { logout } from './users'
 import { isExpired } from '../jwt'
 
 export const GOT_SELECTED_COMMENTS = 'GOT_SELECTED_COMMENTS'
 export const ADD_COMMENT = 'ADD_COMMENT'
+export const DELETE_COMMENT = 'DELETE_COMMENT'
 
-export const GOT_ALL_COMMENTS = 'GOT_ALL_COMMENTS'
-export const GOT_COMMENT = 'GOT_COMMENT'
-
-export const getSelectedComments = (ticketId) => (dispatch) => {
+export const getSelectedComments = (ticketId) => (dispatch, getState) => {
   request
-  .get(`${ baseUrl }/tickets/comments/${ ticketId }`)
-  .then(response => dispatch({
+    .get(`${baseUrl}/tickets/comments/${ticketId}`)
+    .then(response => dispatch({
       type: GOT_SELECTED_COMMENTS,
       payload: response.body.comments
-  }))
-  .catch(err => alert(err))
+    }))
+    .catch(err => alert(err))
 }
 
 export const createComment = (comment) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
+  const isAdmin = state.isAdmin
 
   if (isExpired(jwt)) return dispatch(logout())
 
+  if(isAdmin) {
   request
   .post(`${baseUrl}/comments`)
   .set('Authorization', `Bearer ${jwt}`)
   .send(comment)
   .then(response => dispatch({
-      type: ADD_COMMENT,
-      payload: response.body
+    type: ADD_COMMENT,
+    payload: response.body
   }))
   .catch(err => console.error(err))
+  } else {
+    delete comment.ticket
+    const transforemdComment = {...comment, user: { firstName: state.currentUser.user } }
+    dispatch({
+      type: ADD_COMMENT,
+      payload: transforemdComment
+    })
+  }
 }
 
-
-
-export const getAllComments = () => (dispatch) => {
+export const deleteComment = (id) =>  (dispatch, getState) => {
+  const state = getState()
+  const jwt = state.currentUser.jwt
+  const notQuiteAdmin = state.isAdmin === false
+  
+  if(notQuiteAdmin) {
+    dispatch({
+      type: DELETE_COMMENT,
+      payload: id
+    })
+  } else {
     request
-    .get(`${ baseUrl }/comments`)
-    .then( response => dispatch({
-        type: GOT_ALL_COMMENTS,
-        payload: response.body.comments
+    .delete(`${baseUrl}/comments/${id}`)
+    .set('Authorization', `Bearer ${jwt}`)
+    .then(response => dispatch({
+      type: DELETE_COMMENT,
+      payload: id
     }))
-    .catch(err => alert(err))
-}
-
-export const getComment = (commentId) => (dispatch) => {
-    request 
-    .get(`${baseUrl}/comments/${ commentId }`)
-    .then( response => dispatch({
-        type: GOT_COMMENT,
-        payload: response.body
-    }))
-    .catch(err => alert(err))
+  }
 }

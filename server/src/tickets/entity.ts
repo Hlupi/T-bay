@@ -1,6 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, CreateDateColumn } from 'typeorm'
 import { IsString, IsUrl } from '../../node_modules/class-validator';
-// import { Exclude } from "../../node_modules/class-transformer";
+
 import Event from '../events/entity';
 import Comment from '../comments/entity';
 import User from '../users/entity';
@@ -26,14 +26,12 @@ export default class Ticket extends BaseEntity {
   postedAt: Date
 
 
-  @OneToMany(_ => Comment, comment => comment.ticket, {eager:true})
+  @OneToMany(_ => Comment, comment => comment.ticket)
   comments: Comment[]
 
-  // @Exclude({toPlainOnly:true})
-  @ManyToOne(_ => Event, event => event.tickets)
+  @ManyToOne(_ => Event, event => event.tickets, { onDelete: "CASCADE" })
   event: Event
 
-  // @Exclude({toPlainOnly:true})
   @ManyToOne(_ => User, user => user.tickets, {eager:true})
   user: User
 

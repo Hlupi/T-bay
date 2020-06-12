@@ -1,8 +1,11 @@
 import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
-import { signup } from '../../actions/users'
-import SignupForm from './SignupForm'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+
+import { signup } from '../../actions/users'
+import { Container } from '../../fragments/Layout'
+import SignupForm from './SignupForm'
+
 
 class SignupPage extends PureComponent {
 	handleSubmit = (data) => {
@@ -10,26 +13,25 @@ class SignupPage extends PureComponent {
 	}
 
 	render() {
-		if (this.props.signup.success) return (
-			<Redirect to="/" />
+		const { error, success } = this.props
+
+		if (success) return (
+			<Redirect to="/login" />
 		)
 
 		return (
-			<div>
-				<h1>Sign up</h1>
-
-				<SignupForm onSubmit={this.handleSubmit} />
-
-				<p style={{color:'red'}}>{ this.props.signup.error }</p>
-			</div>
+			<Container styledPage>
+				<SignupForm onSubmit={this.handleSubmit} formError={error} />
+			</Container>
 		)
 	}
 }
 
 const mapStateToProps = function (state) {
 	return {
-		signup: state.signup
+		error: state.signup.error,
+		success: state.signup.success
 	}
 }
 
-export default connect(mapStateToProps, {postSignup: signup})(SignupPage)
+export default connect(mapStateToProps, { postSignup: signup })(SignupPage)

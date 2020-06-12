@@ -1,8 +1,11 @@
 import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
-import { login }  from '../../actions/users'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+
+import { login } from '../../actions/users'
+import { Container } from '../../fragments/Layout'
 import LoginForm from './LoginForm'
+
 
 class LoginPage extends PureComponent {
 	handleSubmit = (data) => {
@@ -10,19 +13,16 @@ class LoginPage extends PureComponent {
 	}
 
 	render() {
+		const { error } = this.props
+
 		if (this.props.currentUser) return (
 			<Redirect to="/" />
 		)
 
 		return (
-			<div>
-				<h1>Login</h1>
-
-				<LoginForm onSubmit={this.handleSubmit} />
-
-        { this.props.error && 
-          <span style={{color:'red'}}>{this.props.error}</span> }
-			</div>
+			<Container styledPage>
+				<LoginForm onSubmit={this.handleSubmit} formError={error} />
+			</Container>
 		)
 	}
 }
