@@ -1,5 +1,5 @@
 # tout
-A Fullstack Ebay-like app for selling tickets with login and comment functionalities. Build with: React, Redux, Typescript, Koa, TypeORM.
+A Fullstack app for selling tickets with login and comment functionalities. Build with: React, Redux, Typescript, Koa, TypeORM.
 
 ## Instructions:
 
